@@ -19,9 +19,10 @@ const (
 )
 
 func main() {
-	if err := db.ConnectTodb(); err != nil {
+	if err := db.ConnectTodb("forum.db"); err != nil {
 		log.Fatal(Red, err.Error(), Rest)
 	}
+	fmt.Println(Green, "Database connected successfully!", Rest)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("FrontEnd/static"))))
 	// handlers
@@ -31,14 +32,14 @@ func main() {
 	http.HandleFunc("/register", forum.HandleRegister)
 
 	// apis
-
 	http.HandleFunc("/api/login", api.LoginApi)
+	http.HandleFunc("/api/logout", api.LogoutAPI)
 	http.HandleFunc("/api/register", api.RegisterAPI)
 	http.HandleFunc("/api/create", api.PostsAPI)
-	// http.HandleFunc("/api/like", nil)
-	// http.HandleFunc("/api/delete", nil)
-	// http.HandleFunc("/api/update", nil)
-	// http.HandleFunc("/api/comment", nil)
+	http.HandleFunc("/api/like", api.AddLikeAPI)
+	http.HandleFunc("/api/delete", api.DeletePostAPI)
+	http.HandleFunc("/api/update", api.UpdatePostAPI)
+	http.HandleFunc("/api/comment", api.NewCommentAPI)
 
 	fmt.Println(Green + "Server Started at : http://" + Dns + Port + Rest)
 	if err := http.ListenAndServe(Port, nil); err != nil {

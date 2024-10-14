@@ -2,25 +2,24 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ConnectTodb() error {
-	dbName := "forum.db"
+var Db *sql.DB
+
+func ConnectTodb(name string) (error) {
 	// open and create the db if the db is not exist
-	db, err := sql.Open("sqlite3", dbName)
+	Db, err := sql.Open("sqlite3", name)
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer Db.Close()
 	// ping the db to see if it connected
-	err = db.Ping()
-	if err != nil {
+	if err = Db.Ping(); err != nil {
 		return err
 	}
 
-	fmt.Printf("Database '%s' connected successfully!\n", dbName)
+	createTables()
 	return nil
 }
