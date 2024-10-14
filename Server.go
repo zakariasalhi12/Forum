@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"os"
 
 	forum "forum/BackEnd/Handlers"
+	"forum/BackEnd/api"
+	"forum/BackEnd/db"
 )
 
 const (
@@ -17,29 +19,29 @@ const (
 )
 
 func main() {
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("FrontEnd/static"))))
+	if err := db.ConnectTodb(); err != nil {
+		log.Fatal(Red, err.Error(), Rest)
+	}
 
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("FrontEnd/static"))))
 	// handlers
 
 	http.HandleFunc("/", forum.HandleMain)
 	http.HandleFunc("/login", forum.HandleLogin)
 	http.HandleFunc("/register", forum.HandleRegister)
 
-	// api
+	// apis
 
-	//http.HandleFunc("/api/login", nil)
-	//http.HandleFunc("/api/register", nil)
-	//http.HandleFunc("/api/create", nil)
-	//http.HandleFunc("/api/like", nil)
-	//http.HandleFunc("/api/delete", nil)
-	//http.HandleFunc("/api/update", nil)
-	//http.HandleFunc("/api/comment", nil)
-
+	http.HandleFunc("/api/login", api.LoginApi)
+	http.HandleFunc("/api/register", api.RegisterAPI)
+	http.HandleFunc("/api/create", api.PostsAPI)
+	// http.HandleFunc("/api/like", nil)
+	// http.HandleFunc("/api/delete", nil)
+	// http.HandleFunc("/api/update", nil)
+	// http.HandleFunc("/api/comment", nil)
 
 	fmt.Println(Green + "Server Started at : http://" + Dns + Port + Rest)
-	err := http.ListenAndServe(Port, nil)
-	if err != nil {
-		fmt.Println(Red + err.Error() + Rest)
-		os.Exit(1)
+	if err := http.ListenAndServe(Port, nil); err != nil {
+		log.Fatal(Red + err.Error() + Rest)
 	}
 }
