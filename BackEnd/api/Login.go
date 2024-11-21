@@ -1,10 +1,14 @@
 package api
 
 import (
-	"encoding/json"
+	"database/sql"
 	"net/http"
+	"strconv"
 
+	"forum/BackEnd/db"
 	"forum/BackEnd/utils"
+
+	"github.com/gofrs/uuid"
 )
 
 func LoginApi(w http.ResponseWriter, r *http.Request) {
@@ -12,16 +16,24 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorWriter(w, "Methode not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	var user utils.Login
-
-	user.Email = r.FormValue("email")
-	user.Password = r.FormValue("password")
-
-	Response, err := json.Marshal(user)
-	if err != nil {
-		utils.ErrorWriter(w, "Cannot marchal data", 500)
+	w.Header().Set("Content-Type", "application/json")
+	user := utils.Login{
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
+	}
+	var UserId int
+	err := db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", user.Email, user.Password).Scan(&UserId)
+	if err == sql.ErrNoRows {
+		utils.Writer(w, map[string]string{"Error": "Email or Password Incorrect"}, 400)
 		return
 	}
-	w.WriteHeader(200)
-	w.Write(Response)
+	if err != nil {
+		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+		return
+	}
+	uuid, err := uuid.NewV4()
+	if err != nil {
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+	}
+	utils.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
 }

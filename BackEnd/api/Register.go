@@ -36,7 +36,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	newuuid, err := uuid.NewV4()
 	if err != nil {
-		utils.ErrorWriter(w, err.Error(), 500)
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 		return
 	}
 	utils.Writer(w, map[string]string{"token": newuuid.String()}, 200)
