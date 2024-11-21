@@ -11,7 +11,7 @@ import (
 
 func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		utils.ErrorWriter(w, "Methode not allowed", http.StatusMethodNotAllowed)
+		utils.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
