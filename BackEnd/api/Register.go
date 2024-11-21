@@ -1,10 +1,12 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
+	"forum/BackEnd/db"
 	"forum/BackEnd/utils"
+
+	"github.com/gofrs/uuid"
 )
 
 func RegisterAPI(w http.ResponseWriter, r *http.Request) {
@@ -12,20 +14,30 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorWriter(w, "Methode not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	var NewUser utils.Register
-
-	// Need to check the data after send it to response and hash the password
-
-	NewUser.UserName = r.FormValue("username")
-	NewUser.Email = r.FormValue("email")
-	NewUser.Password = r.FormValue("password")
-
-	Response, err := json.Marshal(NewUser)
-	if err != nil {
-		utils.ErrorWriter(w, "Cannot marchal data", 500)
+	w.Header().Set("Content-Type", "application/json")
+	NewUser := utils.Register{
+		UserName: r.FormValue("username"),
+		Email:    r.FormValue("email"),
+		Password: r.FormValue("password"),
+		Role:     "user",
+	}
+	if !utils.EmailChecker(NewUser.Email) {
+		utils.Writer(w, map[string]string{"Error": "Bad Email Format"}, 400)
 		return
 	}
-
-	w.WriteHeader(200)
-	w.Write(Response)
+	if !utils.CheckEmpty(NewUser.Email, NewUser.Password, NewUser.Password) {
+		utils.Writer(w, map[string]string{"Error": "Request Cant Be Empty"}, 400)
+		return
+	}
+	_, err := db.Db.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", NewUser.UserName, NewUser.Email, NewUser.Password, NewUser.Role)
+	if err != nil {
+		utils.Writer(w, map[string]string{"Error": "Email Already Used"}, 400)
+		return
+	}
+	newuuid, err := uuid.NewV4()
+	if err != nil {
+		utils.ErrorWriter(w, err.Error(), 500)
+		return
+	}
+	utils.Writer(w, map[string]string{"token": newuuid.String()}, 200)
 }
