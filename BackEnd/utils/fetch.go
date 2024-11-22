@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Fetch(w http.ResponseWriter, url string, data any) error {
+func Fetch(url string, data any) error {
 	// Make the GET request
 	res, err := http.Get(url)
 	if err != nil {

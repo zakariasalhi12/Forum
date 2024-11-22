@@ -37,7 +37,6 @@ func main() {
 	http.HandleFunc("/api/create", api.PostsAPI)
 	http.HandleFunc("/api/like", api.AddLikeAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
-	http.HandleFunc("/api/session", api.SessionApi)
 
 	fmt.Println(Green + "Server Started at : http://localhost" + Port + Rest)
 	if err := http.ListenAndServe(Port, nil); err != nil {

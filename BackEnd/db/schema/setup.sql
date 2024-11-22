@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS likes_dislikes (
     post_id INTEGER,
     user_id INTEGER,
     is_like BOOLEAN,
-    is_comment BOOLEAN
+    is_comment BOOLEAN,
     FOREIGN KEY(post_id) REFERENCES posts(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );

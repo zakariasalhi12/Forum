@@ -19,21 +19,19 @@
     </header>
 
 
-    <main class="flex-center loginmain">
-        <form class="login" action="/api/register" method="post">
-            <label>Username :</label>
-            <input name="username" type="text" placeholder="Enter your username">
-            <label>Email :</label>
-            <input name="email" type="email" placeholder="Enter your email" required>
-            <label>Password :</label>
-            <input name="password" type="password" placeholder="Enter your password" required>
-            <br>
-            <button type="submit">Login</button>
-            <br>
-            <center>
-                <p>Already have an account? <a href="/login">Login</a></p>
-            </center>
-        </form>
+    <main>
+        <label>Username :</label>
+        <input type="text" placeholder="Enter your username">
+        <label>Email :</label>
+        <input type="email" placeholder="Enter your email" required>
+        <label>Password :</label>
+        <input type="password" placeholder="Enter your password" required>
+        <br>
+        <button id="register" type="submit">register</button>
+        <br>
+        <center>
+            <p>Already have an account? <a href="/login">Login</a></p>
+        </center>
     </main>
 
 </body>
