@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -14,16 +15,18 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
+	var NewLikeOrDislike utils.LikesDislikes
+	if err := json.NewDecoder(r.Body).Decode(&NewLikeOrDislike); err != nil {
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
+	}
 	UserID, err := GetUserID(r)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	PostID := r.FormValue("PostID")
-	IsComment := r.FormValue("IsComment")
-	IsLike := r.FormValue("IsLike")
 
-	_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", PostID, UserID, IsLike, IsComment)
+	_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return

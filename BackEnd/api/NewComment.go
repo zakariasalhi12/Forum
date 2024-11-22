@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"forum/BackEnd/db"
@@ -13,14 +14,17 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	PostId := r.FormValue("postid")
-	PostContent := r.FormValue("content")
+	var Comment utils.Comment
 	UserId, err := GetUserID(r)
+	if err := json.NewDecoder(r.Body).Decode(&Comment); err != nil {
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
+	}
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	_, err = db.Db.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", PostId, UserId, PostContent)
+	_, err = db.Db.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", Comment.PostId, UserId, Comment.Content)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return

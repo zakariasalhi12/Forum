@@ -1,7 +1,5 @@
 package utils
 
-import "time"
-
 type Error struct {
 	Error      string
 	StatusCode int
@@ -25,23 +23,16 @@ type Posts struct {
 	Title      string
 	Content    string
 	Categories []string
-	Likes      int
-	Dislikes   int
-	Comments   []Comment
 }
 
 type Comment struct {
-	Id       int
-	PostId   int
-	UserID   int
-	Likes    int
-	Dislikes int
-	Liked    bool
+	PostId  int
+	UserID  int
+	Content string
 }
 
-type Session struct {
-	Id        int
-	UserID    int
-	Token     string
-	CreatedAt time.Time
+type LikesDislikes struct {
+	PostId    int
+	IsComment bool
+	IsLike    bool
 }

@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -15,18 +16,17 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
+	var NewPost utils.Posts
+	if err := json.NewDecoder(r.Body).Decode(&NewPost); err != nil {
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
+	}
 	UserID, err := GetUserID(r)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	NewPost := utils.Posts{
-		User_ID:    UserID,
-		Title:      r.FormValue("title"),
-		Content:    r.FormValue("description"),
-		Categories: r.Form["categories"],
-	}
-	Res, err := db.Db.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", NewPost.User_ID, NewPost.Title, NewPost.Content)
+	Res, err := db.Db.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", UserID, NewPost.Title, NewPost.Content)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
