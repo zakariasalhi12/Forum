@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS likes_dislikes (
     post_id INTEGER,
     user_id INTEGER,
     is_like BOOLEAN,
+    is_comment BOOLEAN,
     FOREIGN KEY(post_id) REFERENCES posts(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
@@ -50,15 +51,5 @@ CREATE TABLE IF NOT EXISTS sessions (
     user_id INTEGER,
     token TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
--- CommentsLikes TABLE--
-CREATE TABLE IF NOT EXISTS comment_likes_dislikes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    comment_id INTEGER,
-    user_id INTEGER,
-    is_like BOOLEAN,
-    FOREIGN KEY(comment_id) REFERENCES comments(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
