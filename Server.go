@@ -36,8 +36,6 @@ func main() {
 	http.HandleFunc("/api/register", api.RegisterAPI)
 	http.HandleFunc("/api/create", api.PostsAPI)
 	http.HandleFunc("/api/like", api.AddLikeAPI)
-	http.HandleFunc("/api/delete", api.DeletePostAPI)
-	http.HandleFunc("/api/update", api.UpdatePostAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
 
 	fmt.Println(Green + "Server Started at : http://localhost" + Port + Rest)

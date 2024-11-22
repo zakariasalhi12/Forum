@@ -12,10 +12,16 @@ CREATE TABLE IF NOT EXISTS posts (
     user_id INTEGER,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    category TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
+);
+-- categories TABLE --
+CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INTEGER,
+    categorie TEXT NOT NULL,
+    FOREIGN KEY(post_id) REFERENCES posts(id)
 );
  
 -- COMMENTS TABLE --

@@ -21,11 +21,13 @@ type Login struct {
 }
 
 type Posts struct {
-	Title       string
-	Description string
-	Likes       int
-	Dislikes    int
-	Comments    []Comment
+	User_ID    int
+	Title      string
+	Content    string
+	Categories []string
+	Likes      int
+	Dislikes   int
+	Comments   []Comment
 }
 
 type Comment struct {

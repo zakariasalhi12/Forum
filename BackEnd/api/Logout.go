@@ -25,5 +25,5 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.Writer(w, map[string]string{"Message": "Logout successful"}, 200)
+	utils.Writer(w, map[string]string{"Message": "Logout successfuly"}, 200)
 }
