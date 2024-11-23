@@ -34,7 +34,7 @@ func main() {
 	http.HandleFunc("/api/login", api.LoginApi)
 	http.HandleFunc("/api/logout", api.LogoutAPI)
 	http.HandleFunc("/api/register", api.RegisterAPI)
-	http.HandleFunc("/api/create", api.PostsAPI)
+	http.HandleFunc("/api/newpost", api.PostsAPI)
 	http.HandleFunc("/api/like", api.AddLikeAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
 

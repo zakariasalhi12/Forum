@@ -6,23 +6,23 @@ type Error struct {
 }
 
 type Register struct {
-	UserName string
-	Email    string
-	Password string
+	UserName string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 	Role     string
 }
 
 type Login struct {
 	ID       int
-	Email    string
-	Password string
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type Posts struct {
 	User_ID    int
-	Title      string
-	Content    string
-	Categories []string
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	Categories []string `json:"categories"`
 }
 
 type Comment struct {

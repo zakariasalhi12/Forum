@@ -45,19 +45,20 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserID(r *http.Request) (int, error) {
-	var UserIdint int
-	UUID, err := r.Cookie("token")
+	var userID int
+	tokenCookie, err := r.Cookie("token")
 	if err != nil {
-		return -1, errors.New("You Most Be Loged To create a post")
+		return -1, errors.New("you must be logged in to create a post")
 	}
-	err = db.Db.QueryRow("SELECT user_id FROM session WHERE token = ?", UUID.Value).Scan(&UserIdint)
-	if err == sql.ErrNoRows {
+	err = db.Db.QueryRow("SELECT user_id FROM sessions WHERE token = ?", tokenCookie.Value).Scan(&userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return -1, errors.New("session not found or expired")
+		}
 		return -1, err
 	}
-	if err != nil {
-		return -1, err
-	}
-	return UserIdint, nil
+
+	return userID, nil
 }
 
 func InsertToCategory(categories []string, postid int64) error {

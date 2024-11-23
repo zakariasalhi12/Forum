@@ -7,9 +7,9 @@ document.getElementById("register").addEventListener("click", (e) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            UserName: UserName,
-            Email: Email,
-            Password: Password,
+            username: UserName,
+            email: Email,
+            password: Password,
         }
     )
     })

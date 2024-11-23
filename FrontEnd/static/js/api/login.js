@@ -6,8 +6,8 @@ document.getElementById("login").addEventListener("click", (e) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            Email: Email,
-            Password: Password,
+            email: Email,
+            password: Password,
         })
     })
 })

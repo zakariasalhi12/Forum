@@ -21,7 +21,7 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var NewUser utils.Login
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
-		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		utils.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
 	if utils.CheckEmpty(NewUser.Email, NewUser.Password) {
