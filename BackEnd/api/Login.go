@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"forum/BackEnd/db"
 	"forum/BackEnd/utils"
@@ -37,6 +38,20 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 	}
+	if err = UpdateSessionForUser(w, UserId, uuid.String()); err != nil {
+		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+	}
 	utils.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
-	// need to create a session for user
+}
+
+func UpdateSessionForUser(w http.ResponseWriter, UserId int, token string) error {
+	if _, err := db.Db.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", token, UserId); err != nil {
+		return err
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   token,
+		Expires: time.Now().Add(24 * time.Hour),
+	})
+	return nil
 }

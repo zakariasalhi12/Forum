@@ -14,6 +14,5 @@ document.getElementById("register").addEventListener("click", (e) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(Body)
     })
-
-    
 })
+
