@@ -24,6 +24,10 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 		return
 	}
+	if utils.CheckEmpty(NewUser.Email, NewUser.Password) {
+		utils.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
+		return
+	}
 	var UserId int
 	err := db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", NewUser.Email, NewUser.Password).Scan(&UserId)
 	if err == sql.ErrNoRows {
@@ -46,11 +50,17 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 
 func UpdateSessionForUser(w http.ResponseWriter, UserId int, token string) error {
 	if _, err := db.Db.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", token, UserId); err != nil {
-		return err
+		if err == sql.ErrNoRows {
+			if _, err := db.Db.Exec("INSERT INTO sessions (user_id , token) VALUES (? , ?)", UserId, token); err != nil {
+				return err
+			}
+			return err
+		}
 	}
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   token,
+		Path:    "/",
 		Expires: time.Now().Add(24 * time.Hour),
 	})
 	return nil

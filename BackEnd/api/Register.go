@@ -28,7 +28,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 		utils.Writer(w, map[string]string{"Error": "Bad Email Format"}, 400)
 		return
 	}
-	if !utils.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
+	if utils.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
 		utils.Writer(w, map[string]string{"Error": "Request Cant Be Empty"}, 400)
 		return
 	}
@@ -61,6 +61,7 @@ func SessionCreate(w http.ResponseWriter, userID int64, token string) error {
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   token,
+		Path:    "/",
 		Expires: time.Now().Add(24 * time.Hour),
 	})
 	return nil
