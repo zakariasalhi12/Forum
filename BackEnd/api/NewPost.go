@@ -21,6 +21,10 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 		return
 	}
+	if utils.CheckEmpty(NewPost.Title, NewPost.Content) {
+		utils.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
+		return
+	}
 	UserID, err := GetUserID(r)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)

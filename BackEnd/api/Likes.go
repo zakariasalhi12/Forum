@@ -60,3 +60,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		"CommentsDislikes": strconv.Itoa(CommentsDislikesCounter),
 	}, 200)
 }
+
+// func AlreadyLiked(userid int, postid int, Islike, Iscomment bool) (bool, error) {
+
+// }

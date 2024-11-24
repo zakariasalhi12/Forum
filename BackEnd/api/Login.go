@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -48,20 +49,30 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 	utils.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
 }
 
-func UpdateSessionForUser(w http.ResponseWriter, UserId int, token string) error {
-	if _, err := db.Db.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", token, UserId); err != nil {
-		if err == sql.ErrNoRows {
-			if _, err := db.Db.Exec("INSERT INTO sessions (user_id , token) VALUES (? , ?)", UserId, token); err != nil {
-				return err
-			}
-			return err
+func UpdateSessionForUser(w http.ResponseWriter, userID int, token string) error {
+	result, err := db.Db.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", token, userID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		_, err := db.Db.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", userID, token)
+		if err != nil {
+			return fmt.Errorf("error inserting session: %w", err)
 		}
 	}
+
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   token,
 		Path:    "/",
 		Expires: time.Now().Add(24 * time.Hour),
 	})
+
 	return nil
 }

@@ -36,3 +36,19 @@ type LikesDislikes struct {
 	IsComment bool
 	IsLike    bool
 }
+
+type AllPosts struct {
+	User_id    int
+	Title      string
+	Content    string
+	Categories []string
+	Comments   []Comment2
+	Likes      []LikesDislikes
+}
+
+type Comment2 struct {
+	PostID  int
+	UserID  int
+	Content string
+	Likes   []LikesDislikes
+}
