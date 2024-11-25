@@ -13,10 +13,6 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	var NewPosts []utils.AllPosts
-
-
 	
-
-
 	utils.Writer(w, NewPosts, 200)
 }

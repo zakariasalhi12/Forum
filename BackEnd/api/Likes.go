@@ -1,7 +1,6 @@
 package api
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 
@@ -28,7 +27,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+		utils.Writer(w, map[string]string{"Error1": err.Error()}, 500)
 		return
 	}
 	if IsLiked {
@@ -77,9 +76,9 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 func AlreadyLiked(userid int, LikesAndDislikes utils.LikesDislikes) (bool, error) {
 	var exists int
-	row := db.Db.QueryRow("SELECT * FROM likes_dislikes WHERE post_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment)
+	row := db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment)
 	err := row.Scan(&exists)
-	if err != sql.ErrNoRows {
+	if exists == 0 {
 		return false, nil
 	}
 	if err != nil {
