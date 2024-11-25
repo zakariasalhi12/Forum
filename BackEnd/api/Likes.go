@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"forum/BackEnd/db"
 	"forum/BackEnd/utils"
@@ -53,11 +52,11 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	utils.Writer(w, map[string]string{
-		"PostsLikes":       strconv.Itoa(PostLikesCounter),
-		"PostsDislikes":    strconv.Itoa(PostDislikesCounter),
-		"CommentsLikes":    strconv.Itoa(CommentsLikeCounter),
-		"CommentsDislikes": strconv.Itoa(CommentsDislikesCounter),
+	utils.Writer(w, map[string]int{
+		"PostsLikes":       PostLikesCounter,
+		"PostsDislikes":    PostDislikesCounter,
+		"CommentsLikes":    CommentsLikeCounter,
+		"CommentsDislikes": CommentsDislikesCounter,
 	}, 200)
 }
 
