@@ -32,9 +32,9 @@ type Comment struct {
 }
 
 type LikesDislikes struct {
-	PostId    int
-	IsComment bool
-	IsLike    bool
+	PostOrCommentId int
+	IsComment       bool
+	IsLike          bool
 }
 
 type Likes struct {

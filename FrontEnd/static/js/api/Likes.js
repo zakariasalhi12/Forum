@@ -3,9 +3,9 @@ document.getElementById("createpost").addEventListener("click", (e) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            PostId: 1,
-            IsComment: false,
-            IsLike: false,
+            PostOrCommentId: 1,
+            IsComment: true,
+            IsLike: true,
         }
     )
     })

@@ -37,11 +37,12 @@ CREATE TABLE IF NOT EXISTS comments (
 -- Likes TABLE --
 CREATE TABLE IF NOT EXISTS likes_dislikes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    post_id INTEGER,
+    post_or_comment_id INTEGER,
     user_id INTEGER,
     is_like BOOLEAN,
     is_comment BOOLEAN,
-    FOREIGN KEY(post_id) REFERENCES posts(id),
+    FOREIGN KEY(post_or_comment_id) REFERENCES posts(id),
+    FOREIGN KEY(post_or_comment_id) REFERENCES comments(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 

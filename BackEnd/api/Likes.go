@@ -25,19 +25,45 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var exists int
+	if NewLikeOrDislike.IsComment {
+		if err := db.Db.QueryRow("SELECT COUNT(*) FROM comments WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
+			utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+			return
+		}
+		if exists == 0 {
+			utils.Writer(w, map[string]string{"Error": "CommentId is not exist"}, 400)
+			return
+		}
+	}
+	if !NewLikeOrDislike.IsComment {
+		if err := db.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
+			utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+			return
+		}
+		if exists == 0 {
+			utils.Writer(w, map[string]string{"Error": "PostID is not exist"}, 400)
+			return
+		}
+	}
+	if err != nil {
+		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+		return
+	}
+
 	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
 	if err != nil {
 		utils.Writer(w, map[string]string{"Error1": err.Error()}, 500)
 		return
 	}
 	if IsLiked {
-		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostOrCommentId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
 		}
 	} else {
-		_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_or_comment_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostOrCommentId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
@@ -76,14 +102,12 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 func AlreadyLiked(userid int, LikesAndDislikes utils.LikesDislikes) (bool, error) {
 	var exists int
-	row := db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment)
-	err := row.Scan(&exists)
+	err := db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostOrCommentId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment).Scan(&exists)
 	if exists == 0 {
 		return false, nil
 	}
 	if err != nil {
 		return false, err
 	}
-
 	return true, nil
 }
