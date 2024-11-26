@@ -6,6 +6,7 @@ import (
 
 	forum "forum/BackEnd/Handlers"
 	"forum/BackEnd/api"
+	Auth "forum/BackEnd/api/Auth"
 	"forum/BackEnd/db"
 )
 
@@ -30,9 +31,9 @@ func main() {
 	http.HandleFunc("/register", forum.HandleRegister)
 
 	// api
-	http.HandleFunc("/api/login", api.LoginApi)
-	http.HandleFunc("/api/logout", api.LogoutAPI)
-	http.HandleFunc("/api/register", api.RegisterAPI)
+	http.HandleFunc("/api/login", Auth.LoginApi)
+	http.HandleFunc("/api/logout", Auth.LogoutAPI)
+	http.HandleFunc("/api/register", Auth.RegisterAPI)
 	http.HandleFunc("/api/newpost", api.PostsAPI)
 	http.HandleFunc("/api/like", api.AddLikeAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)

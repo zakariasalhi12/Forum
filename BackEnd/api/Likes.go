@@ -35,6 +35,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 			helpers.Writer(w, map[string]string{"Error": "CommentId is not exist"}, 400)
 			return
 		}
+
 	}
 	if !NewLikeOrDislike.IsComment {
 		if err := db.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
@@ -45,10 +46,6 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 			helpers.Writer(w, map[string]string{"Error": "PostID is not exist"}, 400)
 			return
 		}
-	}
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
-		return
 	}
 
 	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
