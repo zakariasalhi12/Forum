@@ -11,13 +11,12 @@ func ErrorWriter(w http.ResponseWriter, Err string, stcode int) {
 		Error:      Err,
 		StatusCode: stcode,
 	}
-	t, err := template.ParseFiles("templates/Error.html")
+	t, err := template.ParseFiles("FrontEnd/templates/Error.html")
 	if err != nil {
 		fmt.Println("Error :" + err.Error())
 		http.Error(w, "Error Parsing file", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(Err)
 	w.WriteHeader(NewErr.StatusCode)
 	t.Execute(w, NewErr)
 }
