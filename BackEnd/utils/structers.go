@@ -43,11 +43,12 @@ type Likes struct {
 }
 
 type Dislikes struct {
-	Counter int
-	IsLiked bool
+	Counter   int
+	IsDislike bool
 }
 
 type AllPosts struct {
+	Id         int
 	User_id    int
 	Title      string
 	Content    string
@@ -58,7 +59,7 @@ type AllPosts struct {
 }
 
 type Comment2 struct {
-	PostID   int
+	Id       int
 	UserID   int
 	Content  string
 	Likes    Likes

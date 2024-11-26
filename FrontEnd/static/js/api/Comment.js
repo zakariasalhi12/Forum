@@ -1,11 +1,12 @@
 document.getElementById("createpost").addEventListener("click", (e) => {
-    fetch("api/like", {
+    const Content = e.target.parentElement.querySelectorAll("input")[0].value
+
+    fetch("api/comment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            PostOrCommentId: 1,
-            IsComment: false,
-            IsLike: true,
+            PostId: 1,
+            Content: Content,
         }
     )
     })
