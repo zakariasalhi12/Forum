@@ -9,44 +9,44 @@ import (
 	"time"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/utils"
+	"forum/BackEnd/helpers"
 
 	"github.com/gofrs/uuid"
 )
 
 func LoginApi(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		utils.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	var NewUser utils.Login
+	var NewUser helpers.Login
 	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
-		utils.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
+		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
-	if utils.CheckEmpty(NewUser.Email, NewUser.Password) {
-		utils.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
+	if helpers.CheckEmpty(NewUser.Email, NewUser.Password) {
+		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
 		return
 	}
 	var UserId int
 	err := db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", NewUser.Email, NewUser.Password).Scan(&UserId)
 	if err == sql.ErrNoRows {
-		utils.Writer(w, map[string]string{"Error": "Email or Password Incorrect"}, 400)
+		helpers.Writer(w, map[string]string{"Error": "Email or Password Incorrect"}, 400)
 		return
 	}
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": err.Error()}, 500)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
 	uuid, err := uuid.NewV4()
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 	}
 	if err = UpdateSessionForUser(w, UserId, uuid.String()); err != nil {
-		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 	}
-	utils.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
+	helpers.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
 }
 
 func UpdateSessionForUser(w http.ResponseWriter, userID int, token string) error {

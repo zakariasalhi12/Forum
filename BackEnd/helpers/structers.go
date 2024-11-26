@@ -1,4 +1,6 @@
-package utils
+package helpers
+
+import "time"
 
 type Error struct {
 	Error      string
@@ -53,15 +55,18 @@ type AllPosts struct {
 	Title      string
 	Content    string
 	Categories []string
-	Comments   []Comment2
+	Comments   []Comments
 	Likes      Likes
 	Dislikes   Dislikes
+	CreatedAt  time.Time
 }
 
-type Comment2 struct {
-	Id       int
-	UserID   int
-	Content  string
-	Likes    Likes
-	Dislikes Dislikes
+type Comments struct {
+	Id        int
+	UserID    int
+	UserName  string
+	Content   string
+	Likes     Likes
+	Dislikes  Dislikes
+	CreatedAt time.Time
 }

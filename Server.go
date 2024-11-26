@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -14,7 +13,7 @@ const (
 	Port  = ":8080"
 	Red   = "\033[1;31m"
 	Green = "\033[1;32m"
-	Rest  = "\033[0,0m"
+	Rest  = "\033[0;0m"
 )
 
 func main() {
@@ -22,7 +21,7 @@ func main() {
 		log.Fatal(Red, err.Error(), Rest)
 	}
 	defer db.Db.Close()
-	fmt.Println(Green, "Database connected successfully!", Rest)
+	log.Println(Green, "Database connected successfully!", Rest)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("FrontEnd/static"))))
 	// handlers
 
@@ -39,7 +38,7 @@ func main() {
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
 	http.HandleFunc("/api/getposts", api.AllPostsApi)
 
-	fmt.Println(Green + "Server Started at : http://localhost" + Port + Rest)
+	log.Println(Green + "Server Started at : http://localhost" + Port + Rest)
 	if err := http.ListenAndServe(Port, nil); err != nil {
 		log.Fatal(Red + err.Error() + Rest)
 	}

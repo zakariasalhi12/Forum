@@ -5,23 +5,23 @@ import (
 	"time"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/utils"
+	"forum/BackEnd/helpers"
 )
 
 func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
-		utils.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	cookie, err := r.Cookie("token")
 	if err != nil {
-		utils.Writer(w, "Unauthorized: Token missing or invalid", http.StatusUnauthorized)
+		helpers.Writer(w, "Unauthorized: Token missing or invalid", http.StatusUnauthorized)
 		return
 	}
 	_, err = db.Db.Exec("DELETE FROM sessions WHERE token = ?", cookie.Value)
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": "Failed to log out user."}, http.StatusInternalServerError)
+		helpers.Writer(w, map[string]string{"Error": "Failed to log out user."}, http.StatusInternalServerError)
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
@@ -30,5 +30,5 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		Path:    "/",
 		Expires: time.Now(),
 	})
-	utils.Writer(w, map[string]string{"Message": "Logout successfuly"}, 200)
+	helpers.Writer(w, map[string]string{"Message": "Logout successfuly"}, 200)
 }

@@ -5,30 +5,30 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/utils"
+	"forum/BackEnd/helpers"
 )
 
 func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		utils.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	var Comment utils.Comment
-	UserId, err := GetUserID(r)
+	var Comment helpers.Comment
+	UserId, err := helpers.GetUserID(r)
 	if err := json.NewDecoder(r.Body).Decode(&Comment); err != nil {
-		utils.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 		return
 	}
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
 	_, err = db.Db.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", Comment.PostId, UserId, Comment.Content)
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
 	}
 
-	utils.Writer(w, map[string]string{"Message": "Comment Created successfuly"}, 200)
+	helpers.Writer(w, map[string]string{"Message": "Comment Created successfuly"}, 200)
 }

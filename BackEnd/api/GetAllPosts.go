@@ -5,26 +5,26 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/utils"
+	"forum/BackEnd/helpers"
 )
 
 func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		utils.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	var NewPosts []utils.AllPosts
+	var NewPosts []helpers.AllPosts
 	NewPosts, err := GetPosts(r)
 	if err != nil {
-		utils.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
 	}
-	utils.Writer(w, NewPosts, 200)
+	helpers.Writer(w, NewPosts, 200)
 }
 
-func GetPosts(r *http.Request) ([]utils.AllPosts, error) {
-	var posts []utils.AllPosts
+func GetPosts(r *http.Request) ([]helpers.AllPosts, error) {
+	var posts []helpers.AllPosts
 
 	rows, err := db.Db.Query("SELECT id, user_id, title, content FROM posts ORDER BY created_at DESC")
 	if err != nil {
@@ -33,7 +33,7 @@ func GetPosts(r *http.Request) ([]utils.AllPosts, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var post utils.AllPosts
+		var post helpers.AllPosts
 		if err := rows.Scan(&post.Id, &post.User_id, &post.Title, &post.Content); err != nil {
 			return nil, err
 		}
@@ -88,9 +88,9 @@ func GetCategories(PostId int) ([]string, error) {
 	return Categories, nil
 }
 
-func GetComments(r *http.Request, postId int) ([]utils.Comment2, error) {
-	var Comments []utils.Comment2
-	rows, err := db.Db.Query("SELECT id , user_id , content FROM comments WHERE post_id = ?", postId)
+func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
+	var Comments []helpers.Comments
+	rows, err := db.Db.Query("SELECT id , user_id , content FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func GetComments(r *http.Request, postId int) ([]utils.Comment2, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		comment := utils.Comment2{}
+		comment := helpers.Comments{}
 		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content); err != nil {
 			return nil, err
 		}
@@ -118,10 +118,10 @@ func GetComments(r *http.Request, postId int) ([]utils.Comment2, error) {
 	return Comments, nil
 }
 
-func GetLikes(r *http.Request, Id int, isComment bool) (utils.Likes, error) {
-	var Likes utils.Likes
+func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
+	var Likes helpers.Likes
 
-	UserID, err := GetUserID(r)
+	UserID, err := helpers.GetUserID(r)
 	if err == nil {
 		var exists int
 		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = TRUE", Id, isComment, UserID).Scan(&exists)
@@ -129,21 +129,20 @@ func GetLikes(r *http.Request, Id int, isComment bool) (utils.Likes, error) {
 			Likes.IsLiked = true
 		}
 	}
-
 	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND is_like = TRUE ", Id, isComment).Scan(&Likes.Counter)
 	if err == sql.ErrNoRows {
 		return Likes, nil
 	}
 	if err != nil {
-		return utils.Likes{}, err
+		return helpers.Likes{}, err
 	}
 	return Likes, nil
 }
 
-func GetDislikes(r *http.Request, Id int, isComment bool) (utils.Dislikes, error) {
-	var Dislikes utils.Dislikes
+func GetDislikes(r *http.Request, Id int, isComment bool) (helpers.Dislikes, error) {
+	var Dislikes helpers.Dislikes
 
-	UserID, err := GetUserID(r)
+	UserID, err := helpers.GetUserID(r)
 	if err == nil {
 		var exists int
 		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = FALSE", Id, isComment, UserID).Scan(&exists)
@@ -156,7 +155,7 @@ func GetDislikes(r *http.Request, Id int, isComment bool) (utils.Dislikes, error
 		return Dislikes, nil
 	}
 	if err != nil {
-		return utils.Dislikes{}, err
+		return helpers.Dislikes{}, err
 	}
 	return Dislikes, nil
 }
