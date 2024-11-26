@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/helpers"
+	helpers "forum/BackEnd/helpers/Api"
 
 	"github.com/gofrs/uuid"
 )

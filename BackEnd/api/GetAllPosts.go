@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/helpers"
+	helpers "forum/BackEnd/helpers/Api"
 )
 
 func AllPostsApi(w http.ResponseWriter, r *http.Request) {
@@ -94,12 +94,15 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	defer rows.Close()
 
 	for rows.Next() {
 		comment := helpers.Comments{}
 		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content); err != nil {
+			return nil, err
+		}
+		UserName, err := helpers.GetUserName(comment.UserID)
+		if err != nil {
 			return nil, err
 		}
 		likes, err := GetLikes(r, comment.Id, true)
@@ -112,7 +115,12 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 		}
 		comment.Likes = likes
 		comment.Dislikes = Dislikes
+		comment.UserName = UserName
 		Comments = append(Comments, comment)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 
 	return Comments, nil

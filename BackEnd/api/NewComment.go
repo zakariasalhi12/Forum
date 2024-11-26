@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/helpers"
+	helpers "forum/BackEnd/helpers/Api"
 )
 
 func NewCommentAPI(w http.ResponseWriter, r *http.Request) {

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"forum/BackEnd/db"
-	"forum/BackEnd/helpers"
+	helpers "forum/BackEnd/helpers/Api"
 )
 
 func LogoutAPI(w http.ResponseWriter, r *http.Request) {
