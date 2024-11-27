@@ -23,15 +23,15 @@ type Posts struct {
 }
 
 type Comment struct {
-	PostId  int
 	UserID  int
-	Content string
+	PostId  int    `json:"postid"`
+	Content string `json:"content"`
 }
 
 type LikesDislikes struct {
-	PostOrCommentId int
-	IsComment       bool
-	IsLike          bool
+	PostOrCommentId int  `json:"postorcommentid"`
+	IsComment       bool `json:"iscomment"`
+	IsLike          bool `json:"islike"`
 }
 
 type Likes struct {
