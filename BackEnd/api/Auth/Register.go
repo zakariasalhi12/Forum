@@ -30,7 +30,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	NewUser.Role = "user"
 	if !helpers.EmailChecker(NewUser.Email) {
-		helpers.Writer(w, map[string]string{"Error": "Bad Email Format"}, 400)
+		helpers.Writer(w, map[string]string{"Error": "Invalid email format"}, 400)
 		return
 	}
 	if helpers.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
