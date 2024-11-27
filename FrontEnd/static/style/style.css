@@ -1,14 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
     font-family: Arial;
     box-sizing: border-box;
     scroll-behavior: smooth;
     text-decoration: none;
-    outline: none; 
+    outline: none;
 }
 
-body{
+body {
     background-image: url("../images/bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -16,12 +16,36 @@ body{
     min-height: 100vh;
 }
 
-:root{
-    --black:#1c1e20;
-    --grey:#222; 
-    --whitesmoke:#696969;
-    --orange :#c9ab25; 
+:root {
+    --black: #000000;
+    --grey: #222;
+    --whitesmoke: #696969;
+    --orange: #c9ab25;
+    --white: #ffff;
+    --Puprle: #6354bb;
 }
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 50px 0;
+}
+
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: var(--orange);
+}
+
+/*=======================================
+        Header style
+========================================*/
 
 header {
     display: flex;
@@ -30,6 +54,7 @@ header {
     justify-content: center;
     flex-direction: column;
 }
+
 header div {
     display: flex;
     justify-content: center;
@@ -38,6 +63,7 @@ header div {
     font-size: 12px;
     color: white;
 }
+
 header div img {
     position: relative;
     bottom: -3px;
@@ -48,17 +74,77 @@ header nav {
     gap: 2px;
     align-items: center;
 }
+
 header input {
     font-size: 12px;
     width: 130px;
 }
-header button{
+
+header button {
     padding: 0 5px;
     margin: 5px;
 }
+
 header a {
     color: white;
 }
+
 header a:hover {
     color: var(--orange);
+}
+
+/*=======================================
+        Border style
+========================================*/
+
+.border {
+    margin: 10px;
+    background-color: var(--white);
+    width: 50%;
+}
+
+.border .header {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 8px;
+    font-size: 15px;
+    font-weight: bolder;
+}
+
+.border .fieldsets {
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.fieldsets div {
+    display: flex;
+    justify-content: center;
+    align-items: right;
+    flex-direction: column;
+    width: 50%;
+}
+
+.border legend {
+    color: var(--Puprle);
+    font-size: 11px;
+}
+
+.border .fieldsets p,
+.border .fieldsets b {
+    font-size: 11px;
+    margin: 5px;
+}
+
+.border fieldset {
+    padding: 10px;
+}
+
+.border button {
+    width: 130px;
+    font-size: 11px;
+    margin: 10px;
 }

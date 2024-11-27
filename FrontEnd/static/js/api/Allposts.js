@@ -1,15 +1,10 @@
-fetch("/api/posts")
-.then((res) => res.json())
-.then((res) => {
-    LoadData(res)
+async function LoadData() {
+    const res = await fetch("api/posts")
+    const Data = await res.json()
+    console.log(Data)
 }
-)
-.catch(err => console.error(err))
 
-function LoadData(posts) {  
-    posts.forEach(posts => {
-        
-    });
+LoadData()
 
-}
+
 
