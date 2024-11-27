@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"forum/BackEnd/db"
-	helpers "forum/BackEnd/helpers/Api"
+	helpers "forum/BackEnd/helpers/Api_Helper"
 
 	"github.com/gofrs/uuid"
 )

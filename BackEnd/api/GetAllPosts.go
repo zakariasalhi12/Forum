@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	helpers "forum/BackEnd/helpers/Api"
+	helpers "forum/BackEnd/helpers/Api_Helper"
 )
 
 func AllPostsApi(w http.ResponseWriter, r *http.Request) {

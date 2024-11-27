@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	helpers "forum/BackEnd/helpers/Api"
+	helpers "forum/BackEnd/helpers/Api_Helper"
 )
 
 func HandleRegister(w http.ResponseWriter, r *http.Request) {
