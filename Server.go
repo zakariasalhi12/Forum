@@ -34,10 +34,10 @@ func main() {
 	http.HandleFunc("/api/login", Auth.LoginApi)
 	http.HandleFunc("/api/logout", Auth.LogoutAPI)
 	http.HandleFunc("/api/register", Auth.RegisterAPI)
-	http.HandleFunc("/api/newpost", api.PostsAPI)
+	http.HandleFunc("/api/post", api.PostsAPI)
 	http.HandleFunc("/api/like", api.AddLikeAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
-	http.HandleFunc("/api/getposts", api.AllPostsApi)
+	http.HandleFunc("/api/posts", api.AllPostsApi)
 
 	log.Println(Green + "Server Started at : http://localhost" + Port + Rest)
 	if err := http.ListenAndServe(Port, nil); err != nil {

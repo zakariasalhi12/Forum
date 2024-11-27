@@ -1,4 +1,4 @@
-fetch("/api/getposts")
+fetch("/api/posts")
 .then((res) => res.json())
 .then((res) => {
     LoadData(res)
