@@ -27,7 +27,6 @@ func main() {
 	// handlers
 
 	http.HandleFunc("/", forum.HandleMain)
-	http.HandleFunc("/login", forum.HandleLogin)
 	http.HandleFunc("/register", forum.HandleRegister)
 
 	// api
