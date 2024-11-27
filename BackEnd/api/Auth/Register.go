@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -18,8 +19,13 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	var NewUser helpers.Register
-	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
+	Response, err := io.ReadAll(r.Body)
+	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
+	}
+	if err := json.Unmarshal(Response, &NewUser); err != nil {
+		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
 	NewUser.Role = "user"

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -21,16 +22,23 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	var NewUser helpers.Login
-	if err := json.NewDecoder(r.Body).Decode(&NewUser); err != nil {
+
+	Response, err := io.ReadAll(r.Body)
+	if err != nil {
+		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
+	}
+	if err := json.Unmarshal(Response, &NewUser); err != nil {
 		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
+
 	if helpers.CheckEmpty(NewUser.Email, NewUser.Password) {
 		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
 		return
 	}
 	var UserId int
-	err := db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", NewUser.Email, NewUser.Password).Scan(&UserId)
+	err = db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", NewUser.Email, NewUser.Password).Scan(&UserId)
 	if err == sql.ErrNoRows {
 		helpers.Writer(w, map[string]string{"Error": "Email or Password Incorrect"}, 400)
 		return
