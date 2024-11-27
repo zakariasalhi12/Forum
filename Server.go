@@ -18,7 +18,7 @@ const (
 )
 
 func main() {
-	if err := db.ConnectTodb("forum.db"); err != nil {
+	if err := db.ConnectTodb("BackEnd/db/forum.db"); err != nil {
 		log.Fatal(Red, err.Error(), Rest)
 	}
 	defer db.Db.Close()

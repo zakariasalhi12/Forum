@@ -29,12 +29,17 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	NewUser.Role = "user"
+
+	if helpers.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
+		helpers.Writer(w, map[string]string{"Error": "Request Cant Be Empty"}, 400)
+		return
+	}
 	if !helpers.EmailChecker(NewUser.Email) {
 		helpers.Writer(w, map[string]string{"Error": "Invalid email format"}, 400)
 		return
 	}
-	if helpers.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
-		helpers.Writer(w, map[string]string{"Error": "Request Cant Be Empty"}, 400)
+	if !helpers.PasswordChecker(NewUser.Password) {
+		helpers.Writer(w, map[string]string{"Error": "Invalid Password format"}, 400)
 		return
 	}
 	Res, err := db.Db.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", NewUser.UserName, NewUser.Email, NewUser.Password, NewUser.Role)

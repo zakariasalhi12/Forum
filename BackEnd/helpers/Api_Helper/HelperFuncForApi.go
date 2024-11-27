@@ -74,6 +74,10 @@ func EmailChecker(email string) bool {
 	return EmailRegex.MatchString(email)
 }
 
+func PasswordChecker(password string) bool {
+	return len(password) > 5
+}
+
 func CheckEmpty(args ...string) bool {
 	for _, arg := range args {
 		if arg == "" {
