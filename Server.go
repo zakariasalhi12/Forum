@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/api/like", api.AddLikeAPI)
 	http.HandleFunc("/api/comment", api.NewCommentAPI)
 	http.HandleFunc("/api/posts", api.AllPostsApi)
+	http.HandleFunc("/api/isloged", Auth.Islogged)
 
 	log.Println(Green + "Server Started at : http://localhost" + Port + Rest)
 	if err := http.ListenAndServe(Port, nil); err != nil {

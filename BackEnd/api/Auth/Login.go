@@ -1,4 +1,4 @@
-package api
+package auth
 
 import (
 	"database/sql"
@@ -50,9 +50,11 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 	uuid, err := uuid.NewV4()
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
 	}
 	if err = UpdateSessionForUser(w, UserId, uuid.String()); err != nil {
 		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		return
 	}
 	helpers.Writer(w, map[string]string{"token": uuid.String(), "userid": strconv.Itoa(UserId)}, 200)
 }

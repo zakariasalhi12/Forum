@@ -1,4 +1,4 @@
-package helpers
+package apihelpers
 
 import (
 	"database/sql"
@@ -55,7 +55,7 @@ func GetUserID(r *http.Request) (int, error) {
 	var userID int
 	tokenCookie, err := r.Cookie("token")
 	if err != nil {
-		return -1, errors.New("you must be logged in to create a post")
+		return -1, errors.New("you are not logged")
 	}
 	err = db.Db.QueryRow("SELECT user_id FROM sessions WHERE token = ?", tokenCookie.Value).Scan(&userID)
 	if err != nil {
