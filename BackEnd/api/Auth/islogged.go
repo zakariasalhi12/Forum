@@ -8,6 +8,7 @@ import (
 
 func Islogged(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
+		apihelpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}
 	id, err := apihelpers.GetUserID(r)
