@@ -9,7 +9,7 @@ import (
 )
 
 func LogoutAPI(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
+	if r.Method != http.MethodGet {
 		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
 		return
 	}

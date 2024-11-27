@@ -91,7 +91,9 @@ header a {
 
 header a:hover {
     color: var(--orange);
+    cursor: pointer;
 }
+
 
 /*=======================================
         Border style

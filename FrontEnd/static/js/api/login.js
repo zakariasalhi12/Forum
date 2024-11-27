@@ -5,7 +5,6 @@ function Login() {
         loginButton.addEventListener('click', async () => {
             const email = document.getElementById("loginemail").value
             const password = document.getElementById("loginpassword").value
-
             const Res = await fetch("api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -18,8 +17,9 @@ function Login() {
             if (Res.status != 200) {
                 const Data = await Res.json()
                 alert(Data.Error)
+                return
             }
-
+            window.location.href = "/"
         })
     }
 }
