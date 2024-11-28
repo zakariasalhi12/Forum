@@ -2,7 +2,6 @@ document.addEventListener("elementReady", () => {
     const PostButton = document.getElementById("createpost")
     if (PostButton) {
         PostButton.addEventListener("click", async () => {
-            console.log("test");
             const PostTitle = document.getElementById("Posttitle").value
             const PostContent = document.getElementById("Postcontent").value
             const PostTopics = document.getElementById("Postopic").value.split(" ")

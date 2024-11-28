@@ -31,7 +31,6 @@ async function Logout() {
 
             const elementReadyEvent = new Event("elementReady");
             document.dispatchEvent(elementReadyEvent);
-
         }
         if (nav) {
             nav.innerHTML = `<p>Welcome ${Data.username} |</p> <a id="logout">Logout</a>`;
