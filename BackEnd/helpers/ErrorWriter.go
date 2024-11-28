@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+type Error struct {
+	Error      string
+	StatusCode int
+}
+
 func ErrorWriter(w http.ResponseWriter, Err string, stcode int) {
 	NewErr := Error{
 		Error:      Err,
