@@ -70,10 +70,7 @@ func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) err
 		if err != nil {
 			return err
 		}
-		post.Categories = PostCategories
-		post.Comments = PostComments
-		post.Likes = Likes
-		post.Dislikes = Dislikes
+		post.Categories, post.Comments, post.Likes, post.Dislikes = PostCategories, PostComments, Likes, Dislikes
 		*posts = append(*posts, post)
 	}
 
