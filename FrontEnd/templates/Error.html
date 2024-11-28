@@ -2,15 +2,23 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>Error Page</title>
+    <link rel="stylesheet" href="../static/style/style.css">
+    <script defer src="../static/js/api/logout.js"></script>
+    <script defer src="../static/js/api/login.js"></script>
 </head>
 
-<body>
+    
+</body>
+</html>
 
+<body>
+    
     <header class="flex-beetween">
         <div>
             <a href="/"><img width="40px" src="../static/images/userbaraxe.png" alt="forum"></a>
-            <nav>
+            <nav id="nav">
                 <p>Email :</p>
                 <input id="loginemail" type="email" placeholder="Email" required>
                 <p>Password :</p>
@@ -21,11 +29,17 @@
         </div>
     </header>
 
-    <section class="Error_Page">
-        <h1>{{.Error}}</h1>
-        <br><br>
-        <p>{{.StatusCode}}</p>
+<main>
+    <section class="border" id="welcome">
+        <div class="header">
+            <p>Status Code : {{.StatusCode}}</p>
+        </div>
+            <p style="font-size: 13px;padding: 10px;">Error Message : {{.Error}}</p>
     </section>
+</main>
+
+
+
 </body>
 
 </html>

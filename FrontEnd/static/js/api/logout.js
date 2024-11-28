@@ -3,8 +3,9 @@ async function Logout() {
     const Data = await Res.json();
     if (Res.status == 200) {
         const nav = document.getElementById("nav");
-        nav.innerHTML = `<p>Welcome ${Data.username} |</p> <a id="logout">Logout</a>`;
-
+        if (nav) {
+            nav.innerHTML = `<p>Welcome ${Data.username} |</p> <a id="logout">Logout</a>`;
+        }
         const LogoutButton = document.getElementById("logout");
         if (LogoutButton) {
             LogoutButton.addEventListener("click", async (e) => {

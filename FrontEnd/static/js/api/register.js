@@ -31,7 +31,7 @@ async function CountePosts() {
     const total = document.getElementById("total")
     const Res = await fetch("api/posts")
     const Data = await Res.json()
-    total.innerText = `Total Posts : ${Data.length || 0}`
+    total.innerHTML = `Total Posts : <span style="color:var(--Puprle);">${Data.length || 0}</span>`
 }
 
 Register()

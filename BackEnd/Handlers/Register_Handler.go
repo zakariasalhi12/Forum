@@ -1,22 +1,28 @@
 package handlers
 
 import (
-	"html/template"
-	"log"
 	"net/http"
+	"os"
 
+	utils "forum/BackEnd/helpers"
 	helpers "forum/BackEnd/helpers/Api_Helper"
 )
 
 func HandleRegister(w http.ResponseWriter, r *http.Request) {
-	tem, err := template.ParseFiles("FrontEnd/templates/register.html")
+	if r.Method != http.MethodGet {
+		utils.ErrorWriter(w, "Error 400", http.StatusMethodNotAllowed)
+		return
+	}
+
+	Data, err := os.ReadFile("FrontEnd/templates/index.html")
 	if err != nil {
-		log.Fatal(err)
+		utils.ErrorWriter(w, "Error 500", 500)
+		return
 	}
 
 	if _, err := helpers.GetUserID(r); err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 
-	tem.Execute(w, nil)
+	w.Write(Data)
 }

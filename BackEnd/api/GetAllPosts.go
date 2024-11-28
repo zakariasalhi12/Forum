@@ -14,8 +14,9 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
+	PostID := r.FormValue("id")
 	var NewPosts []helpers.AllPosts
-	NewPosts, err := GetPosts(r)
+	NewPosts, err := GetPosts(r, PostID)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
@@ -23,48 +24,64 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	helpers.Writer(w, NewPosts, 200)
 }
 
-func GetPosts(r *http.Request) ([]helpers.AllPosts, error) {
+func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 	var posts []helpers.AllPosts
 
+	if PostId != "" {
+		rows, err := db.Db.Query("SELECT id, user_id, title, content FROM posts WHERE id = ?", PostId)
+		if err != nil {
+			return nil, err
+		}
+		if err := GetAllPosts(r, rows, &posts); err != nil {
+			return nil, err
+		}
+		return posts, nil
+	}
 	rows, err := db.Db.Query("SELECT id, user_id, title, content FROM posts ORDER BY created_at DESC")
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	if err := GetAllPosts(r, rows, &posts); err != nil {
+		return nil, err
+	}
+	return posts, nil
+}
 
+func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) error {
+	defer rows.Close()
 	for rows.Next() {
 		var post helpers.AllPosts
 		if err := rows.Scan(&post.Id, &post.User_id, &post.Title, &post.Content); err != nil {
-			return nil, err
+			return err
 		}
 		PostCategories, err := GetCategories(post.Id)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		PostComments, err := GetComments(r, post.Id)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		Likes, err := GetLikes(r, post.Id, false)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		Dislikes, err := GetDislikes(r, post.Id, false)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		post.Categories = PostCategories
 		post.Comments = PostComments
 		post.Likes = Likes
 		post.Dislikes = Dislikes
-		posts = append(posts, post)
+		*posts = append(*posts, post)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return err
 	}
 
-	return posts, nil
+	return nil
 }
 
 func GetCategories(PostId int) ([]string, error) {

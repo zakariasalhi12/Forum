@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"html/template"
-	"log"
 	"net/http"
+	"os"
 
 	utils "forum/BackEnd/helpers"
 )
@@ -13,10 +12,10 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorWriter(w, "Error 404", 404)
 		return
 	}
-	tem, err := template.ParseFiles("FrontEnd/templates/index.html")
+	Data, err := os.ReadFile("FrontEnd/templates/index.html")
 	if err != nil {
-		log.Fatal(err)
+		utils.ErrorWriter(w, "Error 500", 500)
+		return
 	}
-
-	tem.Execute(w, nil)
+	w.Write(Data)
 }
