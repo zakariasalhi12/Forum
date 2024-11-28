@@ -163,11 +163,11 @@ header a:hover {
     align-items: center;
     font-size: 12px;
     color: var(--Puprle);
+    text-decoration: underline;
 }
 
 .border .filters p:hover {
     opacity: 0.8;
-    text-decoration: underline;
     cursor: pointer;
 }
 
