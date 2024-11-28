@@ -14,7 +14,7 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Data, err := os.ReadFile("FrontEnd/templates/index.html")
+	Data, err := os.ReadFile("FrontEnd/templates/register.html")
 	if err != nil {
 		utils.ErrorWriter(w, "Error 500", 500)
 		return
