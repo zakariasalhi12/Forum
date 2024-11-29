@@ -11,20 +11,19 @@ async function LoadData() {
         post.Categories.forEach(category => {
             Tags += `<p>#${category}</p>`   
         });
-
         const HtmlComponent =
         `<div class="forum">
             <div class="title">
-                <p>${post.Title}</p>
+                <h5>${post.Title}</h5>
             </div>
             <div class="content">
-                <h5>${post.Content}</h5>
+                <p>${post.Content.replaceAll("\n" , "<br>")}</p>
             </div>
             <div class="topics">
                 <div class="tags">
                     ${Tags}
                 </div>
-                <p>By ${post.UserName}</p>
+                <p>By ${post.UserName} At ${formatDate(post.CreatedAt)}</p>
             </div>
             <div class="reactions">
                 <p id="like"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>${post.Likes.Counter}</p>
@@ -34,24 +33,22 @@ async function LoadData() {
             </div>`
 
             HtmlElement += HtmlComponent
-
-
     });
 
     Parent.innerHTML = HtmlElement
 }
 
 
-// function formatDate(date) {
-//     const day = new Date(date)
-//     const month = day.getMonth() + 1
-//     const currentDay = day.getDate()
-//     const year = day.getFullYear()
-//     const hours = day.getHours()
-//     const minutes = day.getMinutes()
+function formatDate(date) {
+    const day = new Date(date)
+    const month = day.getMonth() + 1
+    const currentDay = day.getDate()
+    const year = day.getFullYear()
+    const hours = day.getHours()
+    const minutes = day.getMinutes()
 
-//     return `${month}/${currentDay}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-// }
+    return `${month}/${currentDay}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+}
 
 LoadData()
 

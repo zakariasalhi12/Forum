@@ -1,7 +1,5 @@
 package apihelpers
 
-import "time"
-
 type Register struct {
 	UserName string `json:"username"`
 	Email    string `json:"email"`
@@ -54,7 +52,7 @@ type AllPosts struct {
 	Comments   []Comments
 	Likes      Likes
 	Dislikes   Dislikes
-	CreatedAt  time.Time
+	CreatedAt  string
 }
 
 type Comments struct {
@@ -64,5 +62,5 @@ type Comments struct {
 	Content   string
 	Likes     Likes
 	Dislikes  Dislikes
-	CreatedAt time.Time
+	CreatedAt string
 }

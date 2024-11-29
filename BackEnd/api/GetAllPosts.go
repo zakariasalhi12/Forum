@@ -28,7 +28,7 @@ func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 	var posts []helpers.AllPosts
 
 	if PostId != "" {
-		rows, err := db.Db.Query("SELECT id, user_id, title, content FROM posts WHERE id = ?", PostId)
+		rows, err := db.Db.Query("SELECT id, user_id, title, content , created_at FROM posts WHERE id = ?", PostId)
 		if err != nil {
 			return nil, err
 		}
@@ -37,7 +37,7 @@ func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 		}
 		return posts, nil
 	}
-	rows, err := db.Db.Query("SELECT id, user_id, title, content FROM posts ORDER BY created_at DESC")
+	rows, err := db.Db.Query("SELECT id, user_id, title, content , created_at FROM posts ORDER BY created_at DESC")
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) err
 	defer rows.Close()
 	for rows.Next() {
 		var post helpers.AllPosts
-		if err := rows.Scan(&post.Id, &post.User_id, &post.Title, &post.Content); err != nil {
+		if err := rows.Scan(&post.Id, &post.User_id, &post.Title, &post.Content, &post.CreatedAt); err != nil {
 			return err
 		}
 		PostCategories, err := GetCategories(post.Id)
