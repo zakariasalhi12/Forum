@@ -1,6 +1,5 @@
 function Like_DisLike() {
 
-
     document.addEventListener("LoaData", () => {
         document.querySelectorAll(".like").forEach(button => {
             button.addEventListener("click", () => {
