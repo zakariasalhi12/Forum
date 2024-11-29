@@ -75,31 +75,38 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 	var PostLikesCounter, PostDislikesCounter, CommentsLikeCounter, CommentsDislikesCounter int
 
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = FALSE").Scan(&PostLikesCounter)
+	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostLikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = FALSE").Scan(&PostDislikesCounter)
+	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostDislikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = TRUE").Scan(&CommentsLikeCounter)
+	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsLikeCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = TRUE").Scan(&CommentsDislikesCounter)
+	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsDislikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	helpers.Writer(w, map[string]int{
-		"PostsLikes":       PostLikesCounter,
-		"PostsDislikes":    PostDislikesCounter,
-		"CommentsLikes":    CommentsLikeCounter,
-		"CommentsDislikes": CommentsDislikesCounter,
+	helpers.Writer(w, struct {
+		PostsLikes       int
+		PostsDislikes    int
+		CommentsLikes    int
+		CommentsDislikes int
+		AlreadyLiked     bool
+	}{
+		PostsLikes:       PostLikesCounter,
+		PostsDislikes:    PostDislikesCounter,
+		CommentsLikes:    CommentsLikeCounter,
+		CommentsDislikes: CommentsDislikesCounter,
+		AlreadyLiked:     IsLiked,
 	}, 200)
 }
 
