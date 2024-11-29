@@ -2,6 +2,10 @@ async function Logout() {
     const Res = await fetch("api/isloged");
     const Data = await Res.json();
     if (Res.status == 200) {
+        const WelcomSection = document.getElementById("welcome")
+        if (WelcomSection) {
+            WelcomSection.remove()
+        }
         const nav = document.getElementById("nav");
         const cp = document.getElementById("cp")
         if (cp) {
