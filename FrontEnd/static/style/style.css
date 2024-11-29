@@ -183,3 +183,53 @@ header a:hover {
     width: 25px;
     cursor: pointer;
 }
+
+/*=======================================
+        Forum style
+========================================*/
+
+.forums-container {
+    padding: 10px;
+}
+.forum {
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+.forums-container .title {
+    color: var(--Puprle);
+}
+.forum .topics {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.forum .content {
+    padding: 5px ;
+}
+.forum .tags {
+    display: flex;
+}
+.forum .tags p {
+    padding: 2px;
+    margin: 5px 2px;
+    border-radius: 5px;
+    font-size: 14px !important;
+}
+.forum .topics p {
+    font-size: 13px;
+    color: var(--Puprle);
+}
+.forum .reactions {
+    display: flex;
+    align-items: center;
+}
+.forum .reactions p {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}

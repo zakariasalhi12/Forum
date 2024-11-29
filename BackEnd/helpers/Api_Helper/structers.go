@@ -47,6 +47,7 @@ type Dislikes struct {
 type AllPosts struct {
 	Id         int
 	User_id    int
+	UserName   string
 	Title      string
 	Content    string
 	Categories []string
