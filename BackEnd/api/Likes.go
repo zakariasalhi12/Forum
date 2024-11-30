@@ -55,6 +55,23 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
+	CloneLike := helpers.LikesDislikes{
+		IsComment:       NewLikeOrDislike.IsComment,
+		IsLike:          !NewLikeOrDislike.IsLike,
+		PostOrCommentId: NewLikeOrDislike.PostOrCommentId,
+	}
+	if err != nil {
+		helpers.Writer(w, map[string]string{"Error1": err.Error()}, 500)
+		return
+	}
+	ReverseLike, err := AlreadyLiked(UserID, CloneLike)
+	if ReverseLike {
+		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", CloneLike.PostOrCommentId, UserID, CloneLike.IsLike, CloneLike.IsComment)
+		if err != nil {
+			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
+			return
+		}
+	}
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error1": err.Error()}, 500)
 		return
