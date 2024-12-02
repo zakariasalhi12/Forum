@@ -1,6 +1,5 @@
 const ActiveColor = "#6354bb" // purple
 
-
 const MypostsButton = document.getElementById("myposts")
 const LikeFilterButton = document.getElementById("likedposts")
 const TopicFilterButton = document.getElementById("topic")

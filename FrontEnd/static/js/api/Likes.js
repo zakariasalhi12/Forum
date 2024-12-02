@@ -1,3 +1,5 @@
+const ActiveColor = "#6354bb" // purple
+
 function Like_DisLike() {
 
     document.addEventListener("LoaData", () => {
