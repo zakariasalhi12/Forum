@@ -39,8 +39,6 @@ async function Logout() {
         if (nav) {
             nav.innerHTML = `<p>Welcome ${Data.username} |</p> <a id="logout">Logout</a>`;
             sessionStorage.setItem("user_id" , Data.user_id)
-            const ElementReady = new Event("SessionReady")
-            document.dispatchEvent(ElementReady)
         }
         const LogoutButton = document.getElementById("logout");
         if (LogoutButton) {

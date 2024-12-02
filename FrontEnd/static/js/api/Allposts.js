@@ -27,6 +27,7 @@ async function LoadData(filter) {
     const Parent = document.getElementById("forums-container")
     let HtmlElement = ""
     Data.forEach(post => {
+
         if (filter === "post") {
             if (post.User_id !== +sessionStorage.getItem("user_id")) {
                 return
