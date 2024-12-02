@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"strconv"
 
 	apihelpers "forum/BackEnd/helpers/Api_Helper"
 )
@@ -22,5 +23,5 @@ func Islogged(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apihelpers.Writer(w, map[string]string{"username": UserName}, 200)
+	apihelpers.Writer(w, map[string]string{"username": UserName, "user_id": strconv.Itoa(id)}, 200)
 }
