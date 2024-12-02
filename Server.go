@@ -28,7 +28,7 @@ func main() {
 
 	http.HandleFunc("/", forum.HandleMain)
 	http.HandleFunc("/register", forum.HandleRegister)
-
+	http.HandleFunc("/post", forum.HandlePost)
 	// api
 	http.HandleFunc("/api/login", Auth.LoginApi)
 	http.HandleFunc("/api/logout", Auth.LogoutAPI)
