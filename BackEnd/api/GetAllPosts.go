@@ -15,6 +15,7 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	PostID := r.FormValue("id")
+	// UserId := r.FormValue("userid")
 	var NewPosts []helpers.AllPosts
 	NewPosts, err := GetPosts(r, PostID)
 	if err != nil {

@@ -1,5 +1,6 @@
-async function LoadData() {
+import  {formatDate} from './Allposts'
 
+async function LoadData() {
     const QueryString = window.location.search
     const UrlParam = new URLSearchParams(QueryString)
     const PostID = UrlParam.get("id")

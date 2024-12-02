@@ -52,7 +52,7 @@ async function LoadData() {
 }
 
 
-export function formatDate(date) {
+function formatDate(date) {
     const day = new Date(date)
     const month = day.getMonth() + 1
     const currentDay = day.getDate()
@@ -65,5 +65,4 @@ export function formatDate(date) {
 
 LoadData()
 
-
-
+export {formatDate}
