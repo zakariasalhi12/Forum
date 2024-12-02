@@ -52,7 +52,7 @@ async function LoadData() {
 }
 
 
-function formatDate(date) {
+export function formatDate(date) {
     const day = new Date(date)
     const month = day.getMonth() + 1
     const currentDay = day.getDate()
