@@ -199,7 +199,13 @@ header a:hover {
 }
 .forums-container .title {
     color: var(--Puprle);
+    cursor: pointer;
 }
+
+.forums-container .title:hover {
+    text-decoration: underline;
+}
+
 .forum .topics {
     display: flex;
     justify-content: space-between;
@@ -209,6 +215,7 @@ header a:hover {
     padding: 4px 0;
     word-wrap: break-word;
 }
+
 .forum .tags {
     display: flex;
 }
