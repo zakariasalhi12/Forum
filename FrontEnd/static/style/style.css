@@ -207,6 +207,7 @@ header a:hover {
 }
 .forum .content {
     padding: 4px 0;
+    word-wrap: break-word;
 }
 .forum .tags {
     display: flex;
