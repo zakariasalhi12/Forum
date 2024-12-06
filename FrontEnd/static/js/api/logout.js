@@ -42,7 +42,7 @@ async function Logout() {
         }
         const LogoutButton = document.getElementById("logout");
         if (LogoutButton) {
-            LogoutButton.addEventListener("click", async (e) => {
+            LogoutButton.addEventListener("click", async () => {
                 await fetch("api/logout", { method: "GET" });
                 window.location.href = "/";
             });

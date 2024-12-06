@@ -55,14 +55,14 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
+	if err != nil {
+		helpers.Writer(w, map[string]string{"Error1": err.Error()}, 500)
+		return
+	}
 	CloneLike := helpers.LikesDislikes{
 		IsComment:       NewLikeOrDislike.IsComment,
 		IsLike:          !NewLikeOrDislike.IsLike,
 		PostOrCommentId: NewLikeOrDislike.PostOrCommentId,
-	}
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error1": err.Error()}, 500)
-		return
 	}
 	ReverseLike, err := AlreadyLiked(UserID, CloneLike)
 	if ReverseLike {
