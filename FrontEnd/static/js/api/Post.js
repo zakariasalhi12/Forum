@@ -10,7 +10,7 @@ async function PostLoader() {
 
     post = post[0]
     const PostContainer = document.getElementById("post-container")
-    PostContainer.setAttribute("data-id" , post.Id)
+    PostContainer.setAttribute("data-id", post.Id)
 
     const UserinforReq = await fetch(`api/userinfo?id=${post.User_id}`)
     const UserInfo = await UserinforReq.json()
@@ -29,14 +29,18 @@ async function PostLoader() {
     post.Categories.forEach(category => {
         Tags += `<p>#${category}</p>`
     });
-
-    PostContainer.innerHTML = 
-    `
+    
+    let CommentsCounter = 0
+    if (post.Comments) {
+        CommentsCounter = post.Comments.length
+    }
+    PostContainer.innerHTML =
+        `
                     <div class="post">
                     <div class="profile">
                         <h3>${post.UserName}</h3>
                         <div>
-                            <p>Join Data: ${UserInfo.CreateDate}</p>
+                            <p>Join Data: ${formatDate(UserInfo.CreateDate)}</p>
                         </div>
                         <div>
                             <p>Total Posts: ${UserInfo.TotalPosts}</p>
@@ -64,15 +68,22 @@ async function PostLoader() {
                 <div class="reactions">
                     ${LikeIcon}
                     ${DislikeIcon}
-                    <p class="comment"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg></p>
+                    <p class="comment"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/><span>${CommentsCounter}</span></svg></p>
                 </div>
     `
-
-
 
     const CreatePostEvent = new Event("LoaData")
     document.dispatchEvent(CreatePostEvent)
 }
+
+function formatDate(date) {
+    const day = new Date(date)
+    const month = day.getMonth() + 1
+    const currentDay = day.getDate()
+    const year = day.getFullYear()
+    return `${month}/${currentDay}/${year}`;
+}
+
 
 PostLoader()
 
