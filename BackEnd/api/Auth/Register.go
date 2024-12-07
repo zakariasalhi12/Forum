@@ -1,65 +1,48 @@
 package auth
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
-	"strconv"
 
-	"forum/BackEnd/db"
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/helpers"
-
-	"github.com/gofrs/uuid"
 )
 
+// RegisterAPI handles the registration of a new user.
 func RegisterAPI(w http.ResponseWriter, r *http.Request) {
+	// Check if the request method is POST
 	if r.Method != http.MethodPost {
-		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": helpers.ErrMethod.Error()}, http.StatusMethodNotAllowed)
 		return
 	}
+	// Set the response content type to JSON
 	w.Header().Set("Content-Type", "application/json")
-	var NewUser helpers.Register
-	Response, err := io.ReadAll(r.Body)
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
-		return
-	}
-	if err := json.Unmarshal(Response, &NewUser); err != nil {
-		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
-		return
-	}
-	NewUser.Role = "user"
 
-	if helpers.CheckEmpty(NewUser.UserName, NewUser.Email, NewUser.Password) {
-		helpers.Writer(w, map[string]string{"Error": "Request Cant Be Empty"}, 400)
-		return
-	}
-	if !helpers.EmailChecker(NewUser.Email) {
-		helpers.Writer(w, map[string]string{"Error": "Invalid email format"}, 400)
-		return
-	}
-	if !helpers.PasswordChecker(NewUser.Password) {
-		helpers.Writer(w, map[string]string{"Error": "Invalid Password format"}, 400)
-		return
-	}
-	Res, err := db.Db.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", NewUser.UserName, NewUser.Email, NewUser.Password, NewUser.Role)
+	// Create a new instance of NewUser model
+	NewUser := models.NewUser()
+
+	// Get the Body Request And Parse It into my newuser Model
+	Status, err := helpers.ParseRequestBody(r, &NewUser)
 	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "Email Already Used"}, 400)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
+	}
+
+	// Check if any of the required fields (Email, Password, UserName) are empty
+	if helpers.CheckEmpty(NewUser.Email, NewUser.Password, NewUser.UserName) {
+		helpers.Writer(w, map[string]string{"Error": helpers.ErrInvalidRequest.Error()}, 400)
 		return
 	}
-	newuuid, err := uuid.NewV4()
+
+	// Attempt to add the new user to the database
+	err = NewUser.AddUserTodb(w)
+	if err == models.EmailAlreadyUsed || err == models.InvalidEmail || err == models.InvalidPassword {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
+		return
+	}
 	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	LastId, err := Res.LastInsertId()
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
-		return
-	}
-	if err := helpers.SessionCreate(w, LastId, newuuid.String()); err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
-		return
-	}
-	helpers.Writer(w, map[string]string{"token": newuuid.String(), "UserId": strconv.Itoa(int(LastId))}, 200)
+
+	// If the registration is successful, return a success message with HTTP Status 200 OK
+	helpers.Writer(w, map[string]string{"Message": "Registration successful!"}, 200)
 }

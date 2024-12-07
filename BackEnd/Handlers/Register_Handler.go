@@ -1,4 +1,4 @@
-package handlers
+package Handlers
 
 import (
 	"net/http"
@@ -13,7 +13,7 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Data, err := os.ReadFile("FrontEnd/templates/register.html")
+	Data, err := os.ReadFile("FrontEnd/Templates/register.html")
 	if err != nil {
 		helpers.ErrorWriter(w, "Error 500", 500)
 		return

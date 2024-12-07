@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
-	"regexp"
-	"time"
 
 	"forum/BackEnd/db"
 )
 
-const (
-	MethodError = "Method Not Allowed."
-	ServerError = "An unexpected error occurred. Please try again later."
+var (
+	ErrMethod         = errors.New("method not allowed")
+	ErrServer         = errors.New("an unexpected error occurred. please try again later")
+	ErrInvalidRequest = errors.New("invalid request")
 )
 
 func Mapper(str1, str2 string) map[string]string {
@@ -32,18 +32,6 @@ func Writer(w http.ResponseWriter, response any, status int) {
 }
 
 // Create a session using uuid
-func SessionCreate(w http.ResponseWriter, userID int64, token string) error {
-	if _, err := db.Db.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", userID, token); err != nil {
-		return err
-	}
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   token,
-		Path:    "/",
-		Expires: time.Now().Add(24 * time.Hour),
-	})
-	return nil
-}
 
 // this function get an id and return the username of the user
 func GetUserName(id int) (string, error) {
@@ -77,23 +65,8 @@ func GetUserID(r *http.Request) (int, error) {
 	return userID, nil
 }
 
-// Email validation
-func EmailChecker(email string) bool {
-	EmailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	return EmailRegex.MatchString(email)
-}
-
-func PasswordChecker(password string) bool {
-	return len(password) > 5
-}
-
 // Machi wkita daba
 func TagsChecker(arr []string) bool {
-	return false
-}
-
-// Machi wkita daba
-func UserNameChecker(s string) bool {
 	return false
 }
 
@@ -104,4 +77,15 @@ func CheckEmpty(args ...string) bool {
 		}
 	}
 	return false
+}
+
+func ParseRequestBody(r *http.Request, Data any) (int, error) {
+	Response, err := io.ReadAll(r.Body)
+	if err != nil {
+		return 500, ErrServer
+	}
+	if err := json.Unmarshal(Response, &Data); err != nil {
+		return 400, ErrInvalidRequest
+	}
+	return -1, nil
 }

@@ -1,4 +1,4 @@
-package handlers
+package Handlers
 
 import (
 	"net/http"
@@ -12,7 +12,7 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorWriter(w, "Error 404", 404)
 		return
 	}
-	Data, err := os.ReadFile("FrontEnd/templates/index.html")
+	Data, err := os.ReadFile("FrontEnd/Templates/index.html")
 	if err != nil {
 		utils.ErrorWriter(w, "Error 500", 500)
 		return

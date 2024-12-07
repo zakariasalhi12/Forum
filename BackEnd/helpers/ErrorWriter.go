@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -16,9 +15,8 @@ func ErrorWriter(w http.ResponseWriter, Err string, stcode int) {
 		Error:      Err,
 		StatusCode: stcode,
 	}
-	t, err := template.ParseFiles("FrontEnd/templates/Error.html")
+	t, err := template.ParseFiles("FrontEnd/Templates/Error.html")
 	if err != nil {
-		fmt.Println("Error :" + err.Error())
 		http.Error(w, "Error Parsing file", http.StatusInternalServerError)
 		return
 	}

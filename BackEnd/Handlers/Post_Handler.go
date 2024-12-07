@@ -1,4 +1,4 @@
-package handlers
+package Handlers
 
 import (
 	"io"
@@ -29,7 +29,7 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorWriter(w, "Invalid Post Id", http.StatusBadRequest)
 		return
 	}
-	Data, err := os.ReadFile("FrontEnd/templates/post.html")
+	Data, err := os.ReadFile("FrontEnd/Templates/post.html")
 	if err != nil {
 		utils.ErrorWriter(w, "Error 500", 500)
 		return
