@@ -101,7 +101,6 @@ async function PostLoader() {
             </div>
             <div class="topics">
                 <div class="tags">
-                    ${Tags}
                 </div>
                 <p>${formatDate(comment.CreatedAt)}</p>
             </div>
