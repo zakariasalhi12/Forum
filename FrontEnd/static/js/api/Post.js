@@ -29,7 +29,7 @@ async function PostLoader() {
     post.Categories.forEach(category => {
         Tags += `<p>#${category}</p>`
     });
-    
+
     let CommentsCounter = 0
     if (post.Comments) {
         CommentsCounter = post.Comments.length
@@ -80,38 +80,41 @@ async function PostLoader() {
 
 
     let HtmlElement = ""
-    post.Comments.forEach(comment => {
+    if (CommentsCounter != 0) {
+        post.Comments.forEach(comment => {
 
-        let LikeIcon2 = `<p class="clike"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg><span>${comment.Likes.Counter}</span></p>`
-        let DislikeIcon2 = `<p class="cdislike"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z"/></svg><span>${comment.Dislikes.Counter}</span></p>`
+            let LikeIcon2 = `<p class="clike"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg><span>${comment.Likes.Counter}</span></p>`
+            let DislikeIcon2 = `<p class="cdislike"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#222"><path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z"/></svg><span>${comment.Dislikes.Counter}</span></p>`
 
-        if (comment.Likes.IsLiked) {
-            LikeIcon2 = `<p class="clike" style="color:${ActiveColor};"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#6354bb"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg><span>${comment.Likes.Counter}</span></p>`
-        }
-        if (comment.Dislikes.IsDislike) {
-            DislikeIcon2 = `<p class="cdislike" style="color:${ActiveColor};"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#6354bb"><path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z"/></svg><span>${comment.Dislikes.Counter}</span></p>`
-        }
-        const HtmlComponent =
-            `<div class="forum" data-id="${comment.Id}">
-            <div class="title">
-                <h5>${comment.UserName}</h5>
-            </div>
-            <div class="content">
-                <p>${comment.Content.replaceAll("\n", "<br>")}</p>
-            </div>
-            <div class="topics">
-                <div class="tags">
+            if (comment.Likes.IsLiked) {
+                LikeIcon2 = `<p class="clike" style="color:${ActiveColor};"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#6354bb"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg><span>${comment.Likes.Counter}</span></p>`
+            }
+            if (comment.Dislikes.IsDislike) {
+                DislikeIcon2 = `<p class="cdislike" style="color:${ActiveColor};"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#6354bb"><path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z"/></svg><span>${comment.Dislikes.Counter}</span></p>`
+            }
+            const HtmlComponent =
+                `<div class="forum" data-id="${comment.Id}">
+                <div class="title">
+                    <h5>${comment.UserName}</h5>
                 </div>
-                <p>${formatDate(comment.CreatedAt)}</p>
-            </div>
-            <div class="reactions">
-                ${LikeIcon2}
-                ${DislikeIcon2}
-            </div>
-            </div>`
+                <div class="content">
+                    <p>${comment.Content.replaceAll("\n", "<br>")}</p>
+                </div>
+                <div class="topics">
+                    <div class="tags">
+                    </div>
+                    <p>${formatDate(comment.CreatedAt)}</p>
+                </div>
+                <div class="reactions">
+                    ${LikeIcon2}
+                    ${DislikeIcon2}
+                </div>
+                </div>`
 
-        HtmlElement += HtmlComponent
-    });
+            HtmlElement += HtmlComponent
+        });
+    }
+
 
     Parent.innerHTML = HtmlElement
 
