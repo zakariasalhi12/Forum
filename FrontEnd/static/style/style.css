@@ -250,10 +250,17 @@ header a:hover {
 .post {
     display: flex;
     font-size: 12px;
+    height: 40vh;
+    position: relative;
 }
 
-.post .profile{
-    width: 40%;
+.post .profile {
+    width: 30%;
+    border-right: 1px solid whitesmoke;
+}
+.post .postContent {
+    padding: 20px;
+    width: 100%;
 }
 .post .profile h3 {
     font-size: 18px;
@@ -263,7 +270,7 @@ header a:hover {
 .post .profile div {
     border: 1px solid #dadada;
     width: 150px;
-    margin: 4px;
+    margin: 10px 0 ;
     background-color: whitesmoke;
     padding: 3px;
 }
@@ -272,6 +279,20 @@ header a:hover {
     font-size: 20px;
     margin-bottom: 10px;
     font-weight: 500;
+}
+
+.post .tags {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    flex-wrap: wrap;
+    bottom: 0;
+    min-width: 70%;
+}
+.post .tags p {
+    font-size: 13px;
+    margin: 0 2px;
+
 }
 
 /*=======================================
