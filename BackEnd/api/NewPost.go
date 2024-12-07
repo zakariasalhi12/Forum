@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"html"
 	"io"
 	"net/http"
 
@@ -29,8 +30,8 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
 		return
 	}
-	NewPost.Content = helpers.EncodeHTML(NewPost.Content)
-	NewPost.Title = helpers.EncodeHTML(NewPost.Title)
+	NewPost.Content = html.EscapeString(NewPost.Content)
+	NewPost.Title = html.EscapeString(NewPost.Title)
 	UserID, err := helpers.GetUserID(r)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)

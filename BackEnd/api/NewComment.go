@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"html"
 	"io"
 	"net/http"
 
@@ -25,7 +26,7 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
-	Comment.Content = helpers.EncodeHTML(Comment.Content)
+	Comment.Content = html.EscapeString(Comment.Content)
 	UserId, err := helpers.GetUserID(r)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
