@@ -20,7 +20,7 @@ function Like_DisLike() {
         })
         document.querySelectorAll(".cdislike").forEach(button => {
             button.addEventListener("click", () => {
-                Likeer(false, true, button.parentElement.querySelector(".like"), button)
+                Likeer(false, true, button.parentElement.querySelector(".clike"), button)
             })
         })
 
@@ -29,13 +29,7 @@ function Like_DisLike() {
 }
 
 async function Likeer(Islike, isComment, LikeButton, DislikeButton) {
-    let Id;
-
-    if (isComment) {
-        Id = +document.getElementById("post-container").getAttribute("data-id")
-    }else {
-        Id = +LikeButton.parentElement.parentElement.getAttribute("data-id")
-    }
+    const Id = +LikeButton.parentElement.parentElement.getAttribute("data-id")
 
     const Res = await fetch("api/like", {
         method: "POST",
@@ -56,13 +50,28 @@ async function Likeer(Islike, isComment, LikeButton, DislikeButton) {
     const Data = await Res.json()
 
     if (Data.AlreadyLiked) {
+        if (isComment) {
+            Like_DisLike_Dom_Handler("#222" , LikeButton , Data.CommentsLikes)
+            Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.CommentsDislikes)
+            return
+        }
         Like_DisLike_Dom_Handler("#222" , LikeButton , Data.PostsLikes)
         Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.PostsDislikes)
         return
     }
     if (Islike) {
+        if (isComment) {
+            Like_DisLike_Dom_Handler(ActiveColor , LikeButton , Data.CommentsLikes)
+            Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.CommentsDislikes)
+            return
+        }
         Like_DisLike_Dom_Handler(ActiveColor , LikeButton , Data.PostsLikes)
         Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.PostsDislikes)
+        return
+    }
+    if (isComment) {
+        Like_DisLike_Dom_Handler("#222" , LikeButton , Data.CommentsLikes)
+        Like_DisLike_Dom_Handler(ActiveColor , DislikeButton , Data.CommentsDislikes)
         return
     }
     Like_DisLike_Dom_Handler("#222" , LikeButton , Data.PostsLikes)
