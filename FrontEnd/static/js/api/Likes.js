@@ -13,13 +13,30 @@ function Like_DisLike() {
                 Likeer(false, false, button.parentElement.querySelector(".like"), button)
             })
         })
+        document.querySelectorAll(".clike").forEach(button => {
+            button.addEventListener("click", () => {
+                Likeer(true, true, button, button.parentElement.querySelector(".cdislike"))
+            })
+        })
+        document.querySelectorAll(".cdislike").forEach(button => {
+            button.addEventListener("click", () => {
+                Likeer(false, true, button.parentElement.querySelector(".like"), button)
+            })
+        })
+
     })
 
 }
 
 async function Likeer(Islike, isComment, LikeButton, DislikeButton) {
+    let Id;
 
-    const Id = LikeButton.parentElement.parentElement.getAttribute("data-id")
+    if (isComment) {
+        Id = +document.getElementById("post-container").getAttribute("data-id")
+    }else {
+        Id = +LikeButton.parentElement.parentElement.getAttribute("data-id")
+    }
+
     const Res = await fetch("api/like", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
