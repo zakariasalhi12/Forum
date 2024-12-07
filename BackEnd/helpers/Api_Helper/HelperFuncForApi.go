@@ -79,6 +79,16 @@ func PasswordChecker(password string) bool {
 	return len(password) > 5
 }
 
+// Machi wkita daba
+func TagsChecker(arr []string) bool {
+	return false
+}
+
+// Machi wkita daba
+func UserNameChecker(s string) bool {
+	return false
+}
+
 func CheckEmpty(args ...string) bool {
 	for _, arg := range args {
 		if arg == "" {
@@ -95,6 +105,6 @@ func EncodeHTML(s string) string {
 	s = strings.ReplaceAll(s, "'", "&#x27;")
 	s = strings.ReplaceAll(s, "/", "&#x2F;")
 	s = strings.ReplaceAll(s, "&", "&amp;")
-	
+
 	return s
 }
