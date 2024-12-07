@@ -49,7 +49,7 @@ func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 	if err != nil {
 		return err
 	}
-	NewSession := NewSession(w, newuuid, LastId)
+	NewSession := NewSession(w, newuuid.String(), LastId)
 	if err := NewSession.CreateSession(); err != nil {
 		return err
 	}

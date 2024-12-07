@@ -1,18 +1,5 @@
 package helpers
 
-type Register struct {
-	UserName string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Role     string
-}
-
-type Login struct {
-	ID       int
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 type Posts struct {
 	User_ID    int
 	Title      string   `json:"title"`
