@@ -4,19 +4,18 @@ import (
 	"net/http"
 	"os"
 
-	utils "forum/BackEnd/helpers"
-	helpers "forum/BackEnd/helpers/Api_Helper"
+	"forum/BackEnd/helpers"
 )
 
 func HandleRegister(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		utils.ErrorWriter(w, "Error 400", http.StatusMethodNotAllowed)
+		helpers.ErrorWriter(w, "Error 400", http.StatusMethodNotAllowed)
 		return
 	}
 
 	Data, err := os.ReadFile("FrontEnd/templates/register.html")
 	if err != nil {
-		utils.ErrorWriter(w, "Error 500", 500)
+		helpers.ErrorWriter(w, "Error 500", 500)
 		return
 	}
 

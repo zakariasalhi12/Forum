@@ -1,4 +1,4 @@
-package apihelpers
+package helpers
 
 type Register struct {
 	UserName string `json:"username"`
@@ -68,5 +68,5 @@ type Comments struct {
 type UserInfo struct {
 	CreateDate string
 	TotalPosts int
-	Role string
+	Role       string
 }

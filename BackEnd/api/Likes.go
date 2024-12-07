@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	helpers "forum/BackEnd/helpers/Api_Helper"
+	"forum/BackEnd/helpers"
 )
 
 func AddLikeAPI(w http.ResponseWriter, r *http.Request) {

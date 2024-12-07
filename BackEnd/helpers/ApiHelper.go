@@ -1,4 +1,4 @@
-package apihelpers
+package helpers
 
 import (
 	"database/sql"
@@ -10,6 +10,15 @@ import (
 
 	"forum/BackEnd/db"
 )
+
+const (
+	MethodError = "Method Not Allowed."
+	ServerError = "An unexpected error occurred. Please try again later."
+)
+
+func Mapper(str1, str2 string) map[string]string {
+	return map[string]string{str1: str2}
+}
 
 // write a json response from the given data
 func Writer(w http.ResponseWriter, response any, status int) {

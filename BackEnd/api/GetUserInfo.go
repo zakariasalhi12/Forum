@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"forum/BackEnd/db"
-	helpers "forum/BackEnd/helpers/Api_Helper"
+	"forum/BackEnd/helpers"
 )
 
 func GetUserInfo(w http.ResponseWriter, r *http.Request) {
