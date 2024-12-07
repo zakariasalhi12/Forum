@@ -109,7 +109,7 @@ func GetCategories(PostId int) ([]string, error) {
 
 func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 	var Comments []helpers.Comments
-	rows, err := db.Db.Query("SELECT id , user_id , content FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
+	rows, err := db.Db.Query("SELECT id , user_id , content , created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 
 	for rows.Next() {
 		comment := helpers.Comments{}
-		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content); err != nil {
+		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content , &comment.CreatedAt); err != nil {
 			return nil, err
 		}
 		UserName, err := helpers.GetUserName(comment.UserID)

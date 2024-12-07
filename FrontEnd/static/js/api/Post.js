@@ -103,7 +103,7 @@ async function PostLoader() {
                 <div class="tags">
                     ${Tags}
                 </div>
-                <p>By ${post.UserName} At ${formatDate(comment.CreatedAt)}</p>
+                <p>${formatDate(comment.CreatedAt)}</p>
             </div>
             <div class="reactions">
                 ${LikeIcon2}
