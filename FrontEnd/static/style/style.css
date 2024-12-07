@@ -227,11 +227,11 @@ header a:hover {
     font-size: 13px;
     color: var(--Puprle);
 }
-.forum .reactions {
+.reactions {
     display: flex;
     align-items: center;
 }
-.forum .reactions p {
+.reactions p {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -242,3 +242,39 @@ header a:hover {
 .forum .content p {
     font-size: 13px;
 }
+
+/*=======================================
+        Post style
+========================================*/
+
+.post {
+    display: flex;
+    font-size: 12px;
+}
+
+.post .profile{
+    width: 40%;
+}
+.post .profile h3 {
+    font-size: 18px;
+    padding-left: 10px;
+    color: var(--Puprle);
+}
+.post .profile div {
+    border: 1px solid #dadada;
+    width: 150px;
+    margin: 4px;
+    background-color: whitesmoke;
+    padding: 3px;
+}
+
+.post .postitle {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/*=======================================
+        Comment style
+========================================*/
+

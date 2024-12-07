@@ -64,3 +64,9 @@ type Comments struct {
 	Dislikes  Dislikes
 	CreatedAt string
 }
+
+type UserInfo struct {
+	CreateDate string
+	TotalPosts int
+	Role string
+}
