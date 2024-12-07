@@ -21,6 +21,12 @@ type Session struct {
 	Path     string
 }
 
+/*
+The user ID is not needed when deleting a session.
+The user ID can be retrieved directly from the token.
+You can use the getId() method to retrieve the user ID.
+*/
+
 func NewSession(w http.ResponseWriter, token string, UserId int64) *Session {
 	return &Session{
 		Token:    token,
