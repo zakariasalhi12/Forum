@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"forum/BackEnd/db"
+	"forum/BackEnd/helpers"
 
 	"github.com/gofrs/uuid"
 )
@@ -54,6 +55,10 @@ func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 }
 
 func (R *Register) RegisterValidation() error {
+	// Check if any of the required fields (Email, Password, UserName) are empty
+	if helpers.CheckEmpty(R.Email, R.Password, R.UserName) {
+		return helpers.ErrInvalidRequest
+	}
 	// The username must be between 3 and 20 characters and can contain letters, numbers, underscores, and hyphens
 	UserNameValidation := regexp.MustCompile(`^[a-zA-Z0-9_-]{3,20}$`)
 	// Validates email format: the username and domain can contain letters, numbers, and certain special characters, with a 2+ character top-level domain.

@@ -84,7 +84,7 @@ func ParseRequestBody(r *http.Request, Data any) (int, error) {
 	if err != nil {
 		return 500, ErrServer
 	}
-	if err := json.Unmarshal(Response, &Data); err != nil {
+	if err := json.Unmarshal(Response, Data); err != nil {
 		return 400, ErrInvalidRequest
 	}
 	return -1, nil

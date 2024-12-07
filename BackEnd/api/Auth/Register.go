@@ -26,15 +26,9 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 	}
 
-	// Check if any of the required fields (Email, Password, UserName) are empty
-	if helpers.CheckEmpty(NewUser.Email, NewUser.Password, NewUser.UserName) {
-		helpers.Writer(w, map[string]string{"Error": helpers.ErrInvalidRequest.Error()}, 400)
-		return
-	}
-
 	// Attempt to add the new user to the database
 	err = NewUser.AddUserTodb(w)
-	if err == models.EmailAlreadyUsed || err == models.InvalidEmail || err == models.InvalidPassword {
+	if err == helpers.ErrInvalidRequest || err == models.EmailAlreadyUsed || err == models.InvalidEmail || err == models.InvalidPassword {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
 		return
 	}
