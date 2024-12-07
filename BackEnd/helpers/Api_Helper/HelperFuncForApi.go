@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"regexp"
+	"strings"
 	"time"
 
 	"forum/BackEnd/db"
@@ -85,4 +86,15 @@ func CheckEmpty(args ...string) bool {
 		}
 	}
 	return false
+}
+
+func EncodeHTML(s string) string {
+	s = strings.ReplaceAll(s, "<", "&lt;")
+	s = strings.ReplaceAll(s, ">", "&gt;")
+	s = strings.ReplaceAll(s, "\"", "&quot;")
+	s = strings.ReplaceAll(s, "'", "&#x27;")
+	s = strings.ReplaceAll(s, "/", "&#x2F;")
+	s = strings.ReplaceAll(s, "&", "&amp;")
+	
+	return s
 }
