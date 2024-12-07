@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"html"
 	"net/http"
 	"regexp"
 
@@ -19,10 +20,10 @@ type Register struct {
 }
 
 var (
-	InvalidPassword  = errors.New("password must be at least 6 characters long")
-	InvalidEmail     = errors.New("invalid Email")
-	InvalidUserName  = errors.New("invalid username")
-	EmailAlreadyUsed = errors.New("email already used")
+	ErrInvalidPassword  = errors.New("password must be at least 6 characters long")
+	ErrInvalidEmail     = errors.New("invalid Email")
+	ErrInvalidUserName  = errors.New("invalid username")
+	ErrEmailAlreadyUsed = errors.New("email already used")
 )
 
 func NewUser() *Register {
@@ -32,12 +33,13 @@ func NewUser() *Register {
 }
 
 func (R *Register) AddUserTodb(w http.ResponseWriter) error {
+	R.Password = html.EscapeString(R.Password)
 	if err := R.RegisterValidation(); err != nil {
 		return err
 	}
 	Res, err := db.Db.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", R.UserName, R.Email, R.Password, R.Role)
 	if err != nil {
-		return EmailAlreadyUsed
+		return ErrEmailAlreadyUsed
 	}
 	newuuid, err := uuid.NewV4()
 	if err != nil {
@@ -64,13 +66,13 @@ func (R *Register) RegisterValidation() error {
 	// Validates email format: the username and domain can contain letters, numbers, and certain special characters, with a 2+ character top-level domain.
 	EmailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	if !UserNameValidation.MatchString(R.UserName) {
-		return InvalidUserName
+		return ErrInvalidUserName
 	}
 	if !EmailRegex.MatchString(R.Email) {
-		return InvalidEmail
+		return ErrInvalidEmail
 	}
 	if len(R.Password) < 6 {
-		return InvalidPassword
+		return ErrInvalidPassword
 	}
 
 	return nil
