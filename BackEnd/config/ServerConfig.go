@@ -29,7 +29,7 @@ func (s *ServerConfig) ApiLogGenerator(str string) {
 	}
 	log.Println(str)
 	if s.SaveLogs {
-		file, err := os.OpenFile("../../Logs/apilogs.txt", os.O_CREATE|os.O_WRONLY, 0o644)
+		file, err := os.OpenFile("Logs/apilogs.log", os.O_CREATE|os.O_WRONLY, 0o644)
 		if err != nil {
 			log.Println(err)
 			return
@@ -46,7 +46,7 @@ func (s *ServerConfig) ServerLogGenerator(str string) {
 	}
 	log.Println(str)
 	if s.SaveLogs {
-		file, err := os.OpenFile("../../Logs/serverlogs.txt", os.O_CREATE|os.O_WRONLY, 0o644)
+		file, err := os.OpenFile("Logs/serverlogs.log", os.O_CREATE|os.O_WRONLY, 0o644)
 		if err != nil {
 			log.Println(err)
 			return
