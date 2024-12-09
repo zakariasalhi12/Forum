@@ -40,7 +40,7 @@ async function PostLoader() {
                     <div class="profile">
                         <h3>${post.UserName}</h3>
                         <div>
-                            <p>Join Data: ${formatDate(UserInfo.CreateDate)}</p>
+                            <p>Join Data: ${formatDate(UserInfo.CreatedAt)}</p>
                         </div>
                         <div>
                             <p>Total Posts: ${UserInfo.TotalPosts}</p>

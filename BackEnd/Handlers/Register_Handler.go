@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/helpers"
 )
 
@@ -19,7 +20,8 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := helpers.GetUserID(r); err == nil {
+	session := &models.Session{}
+	if err := session.GetUserID(r); err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 	}
 

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
 	"time"
@@ -11,6 +12,7 @@ import (
 var (
 	ErrLogout       = errors.New("failed to log out user")
 	ErrInvalidToken = errors.New("invalid token")
+	ErrNotLogged    = errors.New("you are not logged")
 )
 
 type Session struct {
@@ -97,5 +99,21 @@ func (s *Session) UpdateSessionForUser() error {
 		Expires: s.Expires,
 	})
 
+	return nil
+}
+
+func (s *Session) GetUserID(r *http.Request) error {
+	Token, err := r.Cookie("token")
+	if err != nil {
+		return ErrNotLogged
+	}
+	s.Token = Token.Value
+	err = db.Db.QueryRow("SELECT user_id FROM sessions WHERE token = ?", s.Token).Scan(&s.UserID)
+	if err == sql.ErrNoRows {
+		return ErrInvalidToken
+	}
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -2,8 +2,9 @@ package api
 
 import (
 	"net/http"
+	"strconv"
 
-	"forum/BackEnd/db"
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/helpers"
 )
 
@@ -18,14 +19,26 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "Id is importent"}, http.StatusBadRequest)
 		return
 	}
-	var UserInfo helpers.UserInfo
 
-	if err := db.Db.QueryRow("SELECT created_at, role FROM users WHERE id = ? ", UserId).Scan(&UserInfo.CreateDate, &UserInfo.Role); err != nil {
-		helpers.Writer(w, map[string]string{"Error": "User not exist"}, http.StatusBadRequest)
+	Id, err := strconv.Atoi(UserId)
+	if err != nil {
+		helpers.Writer(w, map[string]string{"Error": "ID must be int"}, http.StatusBadRequest)
 		return
 	}
 
-	if err := db.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE user_id = ?", UserId).Scan(&UserInfo.TotalPosts); err != nil {
+	UserInfo := &models.User{Id: Id}
+
+	if err := UserInfo.GetDate(); err != nil {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		return
+	}
+
+	if err := UserInfo.GetRole(); err != nil {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		return
+	}
+
+	if err := UserInfo.GetTotalPosts(); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}

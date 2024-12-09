@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/helpers"
 )
 
@@ -12,16 +13,16 @@ func Islogged(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrMethod.Error()}, http.StatusMethodNotAllowed)
 		return
 	}
-	id, err := helpers.GetUserID(r)
-	if err != nil {
+	Session := &models.Session{}
+	if err := Session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
 		return
 	}
-	UserName, err := helpers.GetUserName(id)
-	if err != nil {
+	User := &models.User{Id: int(Session.UserID)}
+	if err := User.GetUserName(); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
 		return
 	}
 
-	helpers.Writer(w, map[string]string{"username": UserName, "user_id": strconv.Itoa(id)}, 200)
+	helpers.Writer(w, map[string]string{"username": User.UserName, "user_id": strconv.Itoa(int(Session.UserID))}, 200)
 }

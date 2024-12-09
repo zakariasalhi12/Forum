@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/db"
 	"forum/BackEnd/helpers"
 )
@@ -71,11 +72,11 @@ func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) err
 		if err != nil {
 			return err
 		}
-		UserName, err := helpers.GetUserName(post.User_id)
-		if err != nil {
+		User := &models.User{Id: post.User_id}
+		if err := User.GetUserName(); err != nil {
 			return err
 		}
-		post.Categories, post.Comments, post.Likes, post.Dislikes, post.UserName = PostCategories, PostComments, Likes, Dislikes, UserName
+		post.Categories, post.Comments, post.Likes, post.Dislikes, post.UserName = PostCategories, PostComments, Likes, Dislikes, User.UserName
 		*posts = append(*posts, post)
 	}
 
@@ -120,8 +121,8 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content, &comment.CreatedAt); err != nil {
 			return nil, err
 		}
-		UserName, err := helpers.GetUserName(comment.UserID)
-		if err != nil {
+		User := &models.User{Id: comment.Id}
+		if err := User.GetUserName(); err != nil {
 			return nil, err
 		}
 		likes, err := GetLikes(r, comment.Id, true)
@@ -134,7 +135,7 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 		}
 		comment.Likes = likes
 		comment.Dislikes = Dislikes
-		comment.UserName = UserName
+		comment.UserName = User.UserName
 		Comments = append(Comments, comment)
 	}
 
@@ -147,11 +148,11 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 
 func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
 	var Likes helpers.Likes
-
-	UserID, err := helpers.GetUserID(r)
+	Session := &models.Session{}
+	err := Session.GetUserID(r)
 	if err == nil {
 		var exists int
-		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = TRUE", Id, isComment, UserID).Scan(&exists)
+		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = TRUE", Id, isComment, Session.UserID).Scan(&exists)
 		if exists == 1 {
 			Likes.IsLiked = true
 		}
@@ -168,11 +169,11 @@ func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
 
 func GetDislikes(r *http.Request, Id int, isComment bool) (helpers.Dislikes, error) {
 	var Dislikes helpers.Dislikes
-
-	UserID, err := helpers.GetUserID(r)
+	Session := &models.Session{}
+	err := Session.GetUserID(r)
 	if err == nil {
 		var exists int
-		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = FALSE", Id, isComment, UserID).Scan(&exists)
+		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = FALSE", Id, isComment, Session.UserID).Scan(&exists)
 		if exists == 1 {
 			Dislikes.IsDislike = true
 		}

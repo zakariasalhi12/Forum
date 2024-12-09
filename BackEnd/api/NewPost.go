@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/db"
 	"forum/BackEnd/helpers"
 )
@@ -32,12 +33,12 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	NewPost.Content = html.EscapeString(NewPost.Content)
 	NewPost.Title = html.EscapeString(NewPost.Title)
-	UserID, err := helpers.GetUserID(r)
-	if err != nil {
+	Session := &models.Session{}
+	if err := Session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	Res, err := db.Db.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", UserID, NewPost.Title, NewPost.Content)
+	Res, err := db.Db.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", Session.UserID, NewPost.Title, NewPost.Content)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return

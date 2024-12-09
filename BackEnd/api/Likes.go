@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	models "forum/BackEnd/Models"
 	"forum/BackEnd/db"
 	"forum/BackEnd/helpers"
 )
@@ -25,8 +26,8 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
 		return
 	}
-	UserID, err := helpers.GetUserID(r)
-	if err != nil {
+	session := &models.Session{}
+	if err := session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
@@ -54,7 +55,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	IsLiked, err := AlreadyLiked(UserID, NewLikeOrDislike)
+	IsLiked, err := AlreadyLiked(int(session.UserID), NewLikeOrDislike)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error1": err.Error()}, 500)
 		return
@@ -64,9 +65,9 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		IsLike:          !NewLikeOrDislike.IsLike,
 		PostOrCommentId: NewLikeOrDislike.PostOrCommentId,
 	}
-	ReverseLike, err := AlreadyLiked(UserID, CloneLike)
+	ReverseLike, err := AlreadyLiked(int(session.UserID), CloneLike)
 	if ReverseLike {
-		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", CloneLike.PostOrCommentId, UserID, CloneLike.IsLike, CloneLike.IsComment)
+		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", CloneLike.PostOrCommentId, session.UserID, CloneLike.IsLike, CloneLike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
@@ -77,13 +78,13 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if IsLiked {
-		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostOrCommentId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
 		}
 	} else {
-		_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_or_comment_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostOrCommentId, UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_or_comment_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
