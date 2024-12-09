@@ -24,6 +24,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	Status, err := helpers.ParseRequestBody(r, &NewUser)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
+		return
 	}
 
 	// Attempt to add the new user to the database

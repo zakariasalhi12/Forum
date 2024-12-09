@@ -55,13 +55,12 @@ func GetUserID(r *http.Request) (int, error) {
 		return -1, errors.New("you are not logged")
 	}
 	err = db.Db.QueryRow("SELECT user_id FROM sessions WHERE token = ?", tokenCookie.Value).Scan(&userID)
+	if err == sql.ErrNoRows {
+		return -1, errors.New("session not found or expired")
+	}
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return -1, errors.New("session not found or expired")
-		}
 		return -1, err
 	}
-
 	return userID, nil
 }
 
