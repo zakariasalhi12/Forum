@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -23,7 +23,7 @@ func (user *Login) LoginValidation() error {
 	if helpers.CheckEmpty(user.Email, user.Password) {
 		return ErrEmptyRequest
 	}
-	err := db.Db.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", user.Email, user.Password).Scan(&user.ID)
+	err := config.Config.Database.QueryRow("SELECT id FROM users WHERE email = ? AND password = ?", user.Email, user.Password).Scan(&user.ID)
 	if err == sql.ErrNoRows {
 		return ErrInvalidPasswordOrEmail
 	}

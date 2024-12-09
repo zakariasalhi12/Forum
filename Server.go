@@ -5,11 +5,8 @@ import (
 	"net/http"
 
 	routes "forum/BackEnd/Routes"
+	"forum/BackEnd/config"
 	"forum/BackEnd/db"
-)
-
-const (
-	Port = ":8080"
 )
 
 func main() {
@@ -18,11 +15,11 @@ func main() {
 		log.Fatal("Error connecting to the database:", err)
 	}
 	log.Println("Database connected successfully!")
-	defer db.Db.Close()
+	defer config.Config.Database.Close()
 
 	routes.HandlersRoute()
 	routes.ApiRoutes()
 
-	log.Println("Server Started at : http://localhost" + Port)
-	log.Fatal(http.ListenAndServe(Port, nil))
+	log.Println("Server Started at : http://" + config.Config.DNS + config.Config.Port)
+	log.Fatal(http.ListenAndServe(config.Config.Port, nil))
 }

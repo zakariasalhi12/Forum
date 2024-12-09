@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -38,7 +38,7 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	Res, err := db.Db.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", Session.UserID, NewPost.Title, NewPost.Content)
+	Res, err := config.Config.Database.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", Session.UserID, NewPost.Title, NewPost.Content)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
@@ -58,7 +58,7 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 
 func InsertToCategory(categories []string, postid int64) error {
 	for _, categorie := range categories {
-		_, err := db.Db.Exec("INSERT INTO categories (post_id , categorie) VALUES (?, ?)", postid, categorie)
+		_, err := config.Config.Database.Exec("INSERT INTO categories (post_id , categorie) VALUES (?, ?)", postid, categorie)
 		if err != nil {
 			return err
 		}

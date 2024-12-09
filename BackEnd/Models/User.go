@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 )
 
 var ErrInvalidUserID = errors.New("invalid userid")
@@ -18,7 +18,7 @@ type User struct {
 }
 
 func (User *User) GetUserName() error {
-	err := db.Db.QueryRow("SELECT username FROM users WHERE id = ?", User.Id).Scan(&User.UserName)
+	err := config.Config.Database.QueryRow("SELECT username FROM users WHERE id = ?", User.Id).Scan(&User.UserName)
 	if err == sql.ErrNoRows {
 		return ErrInvalidUserID
 	}
@@ -29,7 +29,7 @@ func (User *User) GetUserName() error {
 }
 
 func (User *User) GetRole() error {
-	err := db.Db.QueryRow("SELECT role FROM users WHERE id = ?", User.Id).Scan(&User.Role)
+	err := config.Config.Database.QueryRow("SELECT role FROM users WHERE id = ?", User.Id).Scan(&User.Role)
 	if err == sql.ErrNoRows {
 		return ErrInvalidUserID
 	}
@@ -40,7 +40,7 @@ func (User *User) GetRole() error {
 }
 
 func (User *User) GetDate() error {
-	err := db.Db.QueryRow("SELECT created_at FROM users WHERE id = ?", User.Id).Scan(&User.CreatedAt)
+	err := config.Config.Database.QueryRow("SELECT created_at FROM users WHERE id = ?", User.Id).Scan(&User.CreatedAt)
 	if err == sql.ErrNoRows {
 		return ErrInvalidUserID
 	}
@@ -51,7 +51,7 @@ func (User *User) GetDate() error {
 }
 
 func (User *User) GetTotalPosts() error {
-	err := db.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE user_id = ?", User.Id).Scan(&User.TotalPosts)
+	err := config.Config.Database.QueryRow("SELECT COUNT(*) FROM posts WHERE user_id = ?", User.Id).Scan(&User.TotalPosts)
 	if err == sql.ErrNoRows {
 		return ErrInvalidUserID
 	}

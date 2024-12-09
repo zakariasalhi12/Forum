@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 
 	"github.com/gofrs/uuid"
@@ -37,7 +37,7 @@ func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 	if err := R.RegisterValidation(); err != nil {
 		return err
 	}
-	Res, err := db.Db.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", R.UserName, R.Email, R.Password, R.Role)
+	Res, err := config.Config.Database.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", R.UserName, R.Email, R.Password, R.Role)
 	if err != nil {
 		return ErrEmailAlreadyUsed
 	}

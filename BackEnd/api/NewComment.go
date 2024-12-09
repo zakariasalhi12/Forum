@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -33,7 +33,7 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	_, err = db.Db.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", Comment.PostId, Session.UserID, Comment.Content)
+	_, err = config.Config.Database.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", Comment.PostId, Session.UserID, Comment.Content)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return

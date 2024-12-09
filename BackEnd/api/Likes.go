@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -34,7 +34,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 	var exists int
 	if NewLikeOrDislike.IsComment {
-		if err := db.Db.QueryRow("SELECT COUNT(*) FROM comments WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
+		if err := config.Config.Database.QueryRow("SELECT COUNT(*) FROM comments WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
 		}
@@ -45,7 +45,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 	}
 	if !NewLikeOrDislike.IsComment {
-		if err := db.Db.QueryRow("SELECT COUNT(*) FROM posts WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
+		if err := config.Config.Database.QueryRow("SELECT COUNT(*) FROM posts WHERE id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&exists); err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
 		}
@@ -67,7 +67,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	ReverseLike, err := AlreadyLiked(int(session.UserID), CloneLike)
 	if ReverseLike {
-		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", CloneLike.PostOrCommentId, session.UserID, CloneLike.IsLike, CloneLike.IsComment)
+		_, err = config.Config.Database.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", CloneLike.PostOrCommentId, session.UserID, CloneLike.IsLike, CloneLike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
@@ -78,13 +78,13 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if IsLiked {
-		_, err = db.Db.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = config.Config.Database.Exec("DELETE FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
 		}
 	} else {
-		_, err = db.Db.Exec("INSERT INTO likes_dislikes (post_or_comment_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
+		_, err = config.Config.Database.Exec("INSERT INTO likes_dislikes (post_or_comment_id, user_id, is_like, is_comment) VALUES (?, ?, ?, ?)", NewLikeOrDislike.PostOrCommentId, session.UserID, NewLikeOrDislike.IsLike, NewLikeOrDislike.IsComment)
 		if err != nil {
 			helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 			return
@@ -93,22 +93,22 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 	var PostLikesCounter, PostDislikesCounter, CommentsLikeCounter, CommentsDislikesCounter int
 
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostLikesCounter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostLikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostDislikesCounter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = FALSE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&PostDislikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsLikeCounter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = TRUE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsLikeCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsDislikesCounter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE is_like = FALSE AND is_comment = TRUE AND post_or_comment_id = ?", NewLikeOrDislike.PostOrCommentId).Scan(&CommentsDislikesCounter)
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
@@ -130,7 +130,7 @@ func AddLikeAPI(w http.ResponseWriter, r *http.Request) {
 
 func AlreadyLiked(userid int, LikesAndDislikes helpers.LikesDislikes) (bool, error) {
 	var exists int
-	err := db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostOrCommentId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment).Scan(&exists)
+	err := config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND user_id = ? AND is_like = ? AND is_comment = ?", LikesAndDislikes.PostOrCommentId, userid, LikesAndDislikes.IsLike, LikesAndDislikes.IsComment).Scan(&exists)
 	if exists == 0 {
 		return false, nil
 	}

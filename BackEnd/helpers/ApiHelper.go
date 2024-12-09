@@ -13,10 +13,6 @@ var (
 	ErrInvalidRequest = errors.New("invalid request")
 )
 
-func Mapper(str1, str2 string) map[string]string {
-	return map[string]string{str1: str2}
-}
-
 // write a json response from the given data
 func Writer(w http.ResponseWriter, response any, status int) {
 	res, err := json.Marshal(response)

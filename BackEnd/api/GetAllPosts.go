@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -30,7 +30,7 @@ func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 	var posts []helpers.AllPosts
 
 	if PostId != "" {
-		rows, err := db.Db.Query("SELECT id, user_id, title, content , created_at FROM posts WHERE id = ?", PostId)
+		rows, err := config.Config.Database.Query("SELECT id, user_id, title, content , created_at FROM posts WHERE id = ?", PostId)
 		if err != nil {
 			return nil, err
 		}
@@ -39,7 +39,7 @@ func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 		}
 		return posts, nil
 	}
-	rows, err := db.Db.Query("SELECT id, user_id, title, content , created_at FROM posts ORDER BY created_at DESC")
+	rows, err := config.Config.Database.Query("SELECT id, user_id, title, content , created_at FROM posts ORDER BY created_at DESC")
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) err
 func GetCategories(PostId int) ([]string, error) {
 	Categories := []string(nil)
 
-	rows, err := db.Db.Query("SELECT categorie FROM categories WHERE post_id = ?", PostId)
+	rows, err := config.Config.Database.Query("SELECT categorie FROM categories WHERE post_id = ?", PostId)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func GetCategories(PostId int) ([]string, error) {
 
 func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 	var Comments []helpers.Comments
-	rows, err := db.Db.Query("SELECT id , user_id , content , created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
+	rows, err := config.Config.Database.Query("SELECT id , user_id , content , created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
 	if err != nil {
 		return nil, err
 	}
@@ -152,12 +152,12 @@ func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
 	err := Session.GetUserID(r)
 	if err == nil {
 		var exists int
-		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = TRUE", Id, isComment, Session.UserID).Scan(&exists)
+		config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = TRUE", Id, isComment, Session.UserID).Scan(&exists)
 		if exists == 1 {
 			Likes.IsLiked = true
 		}
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND is_like = TRUE ", Id, isComment).Scan(&Likes.Counter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND is_like = TRUE ", Id, isComment).Scan(&Likes.Counter)
 	if err == sql.ErrNoRows {
 		return Likes, nil
 	}
@@ -173,12 +173,12 @@ func GetDislikes(r *http.Request, Id int, isComment bool) (helpers.Dislikes, err
 	err := Session.GetUserID(r)
 	if err == nil {
 		var exists int
-		db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = FALSE", Id, isComment, Session.UserID).Scan(&exists)
+		config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND user_id = ? AND is_like = FALSE", Id, isComment, Session.UserID).Scan(&exists)
 		if exists == 1 {
 			Dislikes.IsDislike = true
 		}
 	}
-	err = db.Db.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND is_like = FALSE ", Id, isComment).Scan(&Dislikes.Counter)
+	err = config.Config.Database.QueryRow("SELECT COUNT(*) FROM likes_dislikes WHERE post_or_comment_id = ? AND is_comment = ? AND is_like = FALSE ", Id, isComment).Scan(&Dislikes.Counter)
 	if err == sql.ErrNoRows {
 		return Dislikes, nil
 	}

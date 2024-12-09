@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"forum/BackEnd/db"
+	"forum/BackEnd/config"
 )
 
 var (
@@ -40,7 +40,7 @@ func NewSession(w http.ResponseWriter, token string, UserId int64) *Session {
 }
 
 func (s *Session) DeleteSession() error {
-	Row, err := db.Db.Exec("DELETE FROM sessions WHERE token = ?", s.Token)
+	Row, err := config.Config.Database.Exec("DELETE FROM sessions WHERE token = ?", s.Token)
 	if err != nil {
 		return ErrLogout
 	}
@@ -63,7 +63,7 @@ func (s *Session) DeleteSession() error {
 }
 
 func (s *Session) CreateSession() error {
-	if _, err := db.Db.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", s.UserID, s.Token); err != nil {
+	if _, err := config.Config.Database.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", s.UserID, s.Token); err != nil {
 		return err
 	}
 	http.SetCookie(s.Response, &http.Cookie{
@@ -76,7 +76,7 @@ func (s *Session) CreateSession() error {
 }
 
 func (s *Session) UpdateSessionForUser() error {
-	result, err := db.Db.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", s.Token, s.UserID)
+	result, err := config.Config.Database.Exec("UPDATE sessions SET token = ? WHERE user_id = ?", s.Token, s.UserID)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (s *Session) UpdateSessionForUser() error {
 	}
 
 	if rowsAffected == 0 {
-		_, err := db.Db.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", s.UserID, s.Token)
+		_, err := config.Config.Database.Exec("INSERT INTO sessions (user_id, token) VALUES (?, ?)", s.UserID, s.Token)
 		if err != nil {
 			return err
 		}
@@ -108,7 +108,7 @@ func (s *Session) GetUserID(r *http.Request) error {
 		return ErrNotLogged
 	}
 	s.Token = Token.Value
-	err = db.Db.QueryRow("SELECT user_id FROM sessions WHERE token = ?", s.Token).Scan(&s.UserID)
+	err = config.Config.Database.QueryRow("SELECT user_id FROM sessions WHERE token = ?", s.Token).Scan(&s.UserID)
 	if err == sql.ErrNoRows {
 		return ErrInvalidToken
 	}
