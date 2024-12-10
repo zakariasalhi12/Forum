@@ -43,5 +43,5 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	// If the registration is successful, return a success message with HTTP Status 200 OK
 	helpers.Writer(w, map[string]string{"Message": "Registration successful!"}, 200)
 
-	config.Config.ApiLogGenerator(fmt.Sprintf(`New Regestration | UserName : "%s" , Email : "%s"`, NewUser.UserName, NewUser.Email))
+	config.Config.ApiLogGenerator(fmt.Sprintf(`New Registration | UserName : "%s" , Email : "%s"`, NewUser.UserName, NewUser.Email))
 }
