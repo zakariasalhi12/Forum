@@ -1,9 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"html"
-	"io"
 	"net/http"
 
 	models "forum/BackEnd/Models"
@@ -17,16 +15,14 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	var NewPost helpers.Posts
-	Response, err := io.ReadAll(r.Body)
+	var NewPost models.Posts
+
+	Status, err := helpers.ParseRequestBody(r, &NewPost)
 	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
-	if err := json.Unmarshal(Response, &NewPost); err != nil {
-		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
-		return
-	}
+
 	if helpers.CheckEmpty(NewPost.Title, NewPost.Content) {
 		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
 		return

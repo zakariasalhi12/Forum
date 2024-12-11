@@ -1,18 +1,5 @@
 package helpers
 
-type Posts struct {
-	User_ID    int
-	Title      string   `json:"title"`
-	Content    string   `json:"content"`
-	Categories []string `json:"categories"`
-}
-
-type Comment struct {
-	UserID  int
-	PostId  int    `json:"postid"`
-	Content string `json:"content"`
-}
-
 type Likes struct {
 	Counter int
 	IsLiked bool

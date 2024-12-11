@@ -121,7 +121,7 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content, &comment.CreatedAt); err != nil {
 			return nil, err
 		}
-		User := &models.User{Id: comment.Id}
+		User := &models.User{Id: comment.UserID}
 		if err := User.GetUserName(); err != nil {
 			return nil, err
 		}

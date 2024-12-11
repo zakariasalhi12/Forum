@@ -1,9 +1,7 @@
 package api
 
 import (
-	"encoding/json"
 	"html"
-	"io"
 	"net/http"
 
 	models "forum/BackEnd/Models"
@@ -17,14 +15,10 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	var Comment helpers.Comment
-	Response, err := io.ReadAll(r.Body)
+	var Comment models.Comment
+	Status, err := helpers.ParseRequestBody(r, &Comment)
 	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
-		return
-	}
-	if err := json.Unmarshal(Response, &Comment); err != nil {
-		helpers.Writer(w, map[string]string{"Error": "Invalid Request"}, 400)
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
 	Comment.Content = html.EscapeString(Comment.Content)
