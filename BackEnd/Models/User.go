@@ -17,6 +17,16 @@ type User struct {
 	TotalPosts int
 }
 
+func (User *User) CheckerUserExists() (bool, error) {
+	var Exists bool
+
+	if err := config.Config.Database.QueryRow("SELECT COUNT(1) FROM users WHERE id = ?", User.Id).Scan(&Exists); err != nil {
+		return false, err
+	}
+
+	return Exists, nil
+}
+
 func (User *User) GetUserName() error {
 	err := config.Config.Database.QueryRow("SELECT username FROM users WHERE id = ?", User.Id).Scan(&User.UserName)
 	if err == sql.ErrNoRows {
