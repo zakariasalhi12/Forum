@@ -25,10 +25,12 @@ async function LoadData(filter) {
     const Data = await res.json()
 
     const Parent = document.getElementById("forums-container")
-
-
-
     let HtmlElement = ""
+
+    if (!Data) {
+        return
+    }
+
     Data.forEach(post => {
 
         let CommentsCounter = 0
