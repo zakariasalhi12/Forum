@@ -13,12 +13,6 @@ type Comment struct {
 	Content string `json:"content"`
 }
 
-type LikesDislikes struct {
-	PostOrCommentId int  `json:"postorcommentid"`
-	IsComment       bool `json:"iscomment"`
-	IsLike          bool `json:"islike"`
-}
-
 type Likes struct {
 	Counter int
 	IsLiked bool
