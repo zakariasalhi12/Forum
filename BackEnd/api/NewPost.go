@@ -1,11 +1,9 @@
 package api
 
 import (
-	"html"
 	"net/http"
 
 	models "forum/BackEnd/Models"
-	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -27,37 +25,17 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
 		return
 	}
-	NewPost.Content = html.EscapeString(NewPost.Content)
-	NewPost.Title = html.EscapeString(NewPost.Title)
 	Session := &models.Session{}
 	if err := Session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	Res, err := config.Config.Database.Exec("INSERT INTO posts (user_id ,title ,content) VALUES (? ,? ,?)", Session.UserID, NewPost.Title, NewPost.Content)
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
-		return
-	}
-	LastID, err := Res.LastInsertId()
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
-		return
-	}
-	err = InsertToCategory(NewPost.Categories, LastID)
-	if err != nil {
-		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
-		return
-	}
-	helpers.Writer(w, map[string]string{"Message": "Post Created successfuly"}, 200)
-}
+	NewPost.User_ID = int(Session.UserID)
 
-func InsertToCategory(categories []string, postid int64) error {
-	for _, categorie := range categories {
-		_, err := config.Config.Database.Exec("INSERT INTO categories (post_id , categorie) VALUES (?, ?)", postid, categorie)
-		if err != nil {
-			return err
-		}
+	if _, err := NewPost.AddPost(); err != nil {
+		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)
+		return
 	}
-	return nil
+
+	helpers.Writer(w, map[string]string{"Message": "Post Created successfuly"}, 200)
 }
