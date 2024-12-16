@@ -1,9 +1,11 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	models "forum/BackEnd/Models"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 
 	"github.com/gofrs/uuid"
@@ -46,5 +48,12 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": "An unexpected error occurred. Please try again later."}, 500)
 		return
 	}
+
 	helpers.Writer(w, map[string]string{"Message": "Logged successful!"}, 200)
+
+	// Logs Part
+	LoggedUsser := models.User{Id: int(User.ID)}
+	LoggedUsser.GetUserName()
+	LoggedUsser.GetUserEmail()
+	config.Config.ApiLogGenerator(fmt.Sprintf(`New Login | UserName : "%s" , Email : "%s"`, LoggedUsser.UserName, LoggedUsser.Email))
 }

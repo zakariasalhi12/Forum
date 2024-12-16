@@ -1,9 +1,11 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	models "forum/BackEnd/Models"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -19,9 +21,11 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Unauthorized": "Token missing or invalid"}, http.StatusUnauthorized)
 		return
 	}
-	Session := models.NewSession(w, cookie.Value, 0)
+	OldSession := models.Session{Response: w, Token: cookie.Value}
+	OldSession.GetUserID(r)
+	NewSession := models.NewSession(w, cookie.Value, 0)
 
-	err = Session.DeleteSession()
+	err = NewSession.DeleteSession()
 	if err == models.ErrInvalidToken {
 		helpers.Writer(w, map[string]string{"Unauthorized": err.Error()}, http.StatusUnauthorized)
 		return
@@ -32,6 +36,10 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.Writer(w, map[string]string{"Message": "Logout successfuly"}, 200)
-
+	// Logs Part
+	LoggoutUsser := models.User{Id: int(OldSession.UserID)}
+	LoggoutUsser.GetUserName()
+	LoggoutUsser.GetUserEmail()
+	config.Config.ApiLogGenerator(fmt.Sprintf(`New Logout | UserName : "%s" , Email : "%s"`, LoggoutUsser.UserName, LoggoutUsser.Email))
 
 }
