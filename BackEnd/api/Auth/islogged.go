@@ -18,6 +18,15 @@ func Islogged(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
 		return
 	}
+	err := Session.DeleteExpiredSession()
+	if err == models.ErrSessionExpired {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
+		return
+	}
+	if err != nil {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
+		return
+	}
 	User := &models.User{Id: int(Session.UserID)}
 	if err := User.GetUserName(); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)

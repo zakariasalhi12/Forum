@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	ErrLogout       = errors.New("failed to log out user")
-	ErrInvalidToken = errors.New("invalid token")
-	ErrNotLogged    = errors.New("you are not logged")
+	ErrLogout         = errors.New("failed to log out user")
+	ErrInvalidToken   = errors.New("invalid token")
+	ErrNotLogged      = errors.New("you are not logged")
+	ErrSessionExpired = errors.New("session expired")
 )
 
 type Session struct {
@@ -115,5 +116,32 @@ func (s *Session) GetUserID(r *http.Request) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (s *Session) DeleteExpiredSession() error {
+	Row, err := config.Config.Database.Exec("DELETE FROM sessions WHERE user_id = ? AND DATETIME(created_at, '+24 hours') <= CURRENT_TIMESTAMP", s.UserID)
+	if err == sql.ErrNoRows {
+		return nil
+	}
+	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
+		return err
+	}
+	counter, err := Row.RowsAffected()
+	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
+		return err
+	}
+	if counter == 1 {
+		http.SetCookie(s.Response, &http.Cookie{
+			Name:    "token",
+			Value:   "",
+			Path:    "/",
+			Expires: time.Now(),
+		})
+		return ErrSessionExpired
+	}
+
 	return nil
 }
