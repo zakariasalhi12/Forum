@@ -27,6 +27,7 @@ func (s *ServerConfig) ApiLogGenerator(str string) {
 	if !s.ApiLogs {
 		return
 	}
+	log.SetOutput(os.Stdin)
 	log.Println(str)
 	if s.SaveLogs {
 		file, err := os.OpenFile("Logs/apilogs.log", os.O_CREATE|os.O_WRONLY, 0o644)
@@ -44,6 +45,7 @@ func (s *ServerConfig) ServerLogGenerator(str string) {
 	if !s.ServerLogs {
 		return
 	}
+	log.SetOutput(os.Stdin)
 	log.Println(str)
 	if s.SaveLogs {
 		file, err := os.OpenFile("Logs/serverlogs.log", os.O_CREATE|os.O_WRONLY, 0o644)

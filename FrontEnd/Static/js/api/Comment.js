@@ -1,25 +1,12 @@
+import {CreateCommentSection} from "./Config.js"
+
 async function CreateComment() {
 
     const IsLogged = await fetch("/api/isloged")
     if (IsLogged.status != 200) {
         return
     }
-    document.getElementById("comment-component").innerHTML =
-    `
-                <div class="header">
-                <p>Create New Comment</p>
-            </div>
-            <div class="fieldsets">
-                <div>
-                    <fieldset>
-                        <legend>Comment Content :</legend>
-                        <textarea id="commentcontent" style="resize: none; width: 100%;" rows="5" id="registeremail" ></textarea>
-                    </fieldset>
-                    <button id="createcomment">Create Comment</button>
-                </div>
-            </div>
-    `
-
+    document.getElementById("comment-component").innerHTML = CreateCommentSection
     document.getElementById("createcomment").addEventListener("click", async (e) => {
         const Content = e.target.parentElement.querySelectorAll("textarea")[0].value
 

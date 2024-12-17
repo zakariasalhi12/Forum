@@ -1,4 +1,4 @@
-const ActiveColor = "#6354bb" // purple
+import {PurpleColor , BlackColor} from "./Config.js"
 
 function Like_DisLike() {
 
@@ -51,31 +51,31 @@ async function Likeer(Islike, isComment, LikeButton, DislikeButton) {
 
     if (Data.AlreadyLiked) {
         if (isComment) {
-            Like_DisLike_Dom_Handler("#222" , LikeButton , Data.CommentsLikes)
-            Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.CommentsDislikes)
+            Like_DisLike_Dom_Handler(BlackColor , LikeButton , Data.CommentsLikes)
+            Like_DisLike_Dom_Handler(BlackColor , DislikeButton , Data.CommentsDislikes)
             return
         }
-        Like_DisLike_Dom_Handler("#222" , LikeButton , Data.PostsLikes)
-        Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.PostsDislikes)
+        Like_DisLike_Dom_Handler(BlackColor , LikeButton , Data.PostsLikes)
+        Like_DisLike_Dom_Handler(BlackColor , DislikeButton , Data.PostsDislikes)
         return
     }
     if (Islike) {
         if (isComment) {
-            Like_DisLike_Dom_Handler(ActiveColor , LikeButton , Data.CommentsLikes)
-            Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.CommentsDislikes)
+            Like_DisLike_Dom_Handler(PurpleColor , LikeButton , Data.CommentsLikes)
+            Like_DisLike_Dom_Handler(BlackColor , DislikeButton , Data.CommentsDislikes)
             return
         }
-        Like_DisLike_Dom_Handler(ActiveColor , LikeButton , Data.PostsLikes)
-        Like_DisLike_Dom_Handler("#222" , DislikeButton , Data.PostsDislikes)
+        Like_DisLike_Dom_Handler(PurpleColor , LikeButton , Data.PostsLikes)
+        Like_DisLike_Dom_Handler(BlackColor , DislikeButton , Data.PostsDislikes)
         return
     }
     if (isComment) {
-        Like_DisLike_Dom_Handler("#222" , LikeButton , Data.CommentsLikes)
-        Like_DisLike_Dom_Handler(ActiveColor , DislikeButton , Data.CommentsDislikes)
+        Like_DisLike_Dom_Handler(BlackColor , LikeButton , Data.CommentsLikes)
+        Like_DisLike_Dom_Handler(PurpleColor , DislikeButton , Data.CommentsDislikes)
         return
     }
-    Like_DisLike_Dom_Handler("#222" , LikeButton , Data.PostsLikes)
-    Like_DisLike_Dom_Handler(ActiveColor , DislikeButton , Data.PostsDislikes)
+    Like_DisLike_Dom_Handler(BlackColor , LikeButton , Data.PostsLikes)
+    Like_DisLike_Dom_Handler(PurpleColor , DislikeButton , Data.PostsDislikes)
 }
 
 function Like_DisLike_Dom_Handler(color , button , data) {
