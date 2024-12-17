@@ -25,6 +25,9 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	// Get the Body Request And Parse It into my newuser Model
 	Status, err := helpers.ParseRequestBody(r, &NewUser)
 	if err != nil {
+		if Status == 500 {
+			config.Config.ServerLogGenerator(err.Error())
+		}
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
@@ -36,6 +39,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}

@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"forum/BackEnd/config"
 	"html/template"
 	"net/http"
 )
@@ -17,6 +18,7 @@ func ErrorWriter(w http.ResponseWriter, Err string, stcode int) {
 	}
 	t, err := template.ParseFiles("FrontEnd/Templates/Error.html")
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		http.Error(w, "Error Parsing file", http.StatusInternalServerError)
 		return
 	}

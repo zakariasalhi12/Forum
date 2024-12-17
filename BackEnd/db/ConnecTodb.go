@@ -14,18 +14,22 @@ func ConnectTodb(name string) error {
 	var err error
 	config.Config.Database, err = sql.Open("sqlite3", name)
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		return err
 	}
 	// ping the db to see if it connected
 	if err = config.Config.Database.Ping(); err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		return err
 	}
 	Schema, err := os.ReadFile("BackEnd/db/schema/setup.sql")
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		return err
 	}
 	_, err = config.Config.Database.Exec(string(Schema))
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		return err
 	}
 	return nil

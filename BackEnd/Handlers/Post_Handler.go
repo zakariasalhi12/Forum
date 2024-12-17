@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"forum/BackEnd/config"
 	utils "forum/BackEnd/helpers"
 )
 
@@ -16,12 +17,14 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	PostID := r.FormValue("id")
 	Res, err := http.Get("http://localhost:8080/api/posts?id=" + PostID)
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		utils.ErrorWriter(w, "An unexpected error occurred. Please try again later.", http.StatusInternalServerError)
 		return
 	}
 	defer Res.Body.Close()
 	Body, err := io.ReadAll(Res.Body)
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		utils.ErrorWriter(w, "An unexpected error occurred. Please try again later.", http.StatusInternalServerError)
 		return
 	}
@@ -31,6 +34,7 @@ func HandlePost(w http.ResponseWriter, r *http.Request) {
 	}
 	Data, err := os.ReadFile("FrontEnd/Templates/post.html")
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		utils.ErrorWriter(w, "Error 500", 500)
 		return
 	}

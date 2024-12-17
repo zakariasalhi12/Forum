@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -16,6 +17,9 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 	var Comment models.Comment
 	Status, err := helpers.ParseRequestBody(r, &Comment)
 	if err != nil {
+		if Status == 500 {
+			config.Config.ServerLogGenerator(err.Error())
+		}
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
@@ -26,6 +30,7 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	Comment.UserID = int(Session.UserID)
 	if err := Comment.AddComment(); err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)
 		return
 	}

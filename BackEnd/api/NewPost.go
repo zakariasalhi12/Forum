@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	models "forum/BackEnd/Models"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -17,6 +18,9 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 
 	Status, err := helpers.ParseRequestBody(r, &NewPost)
 	if err != nil {
+		if Status == 500 {
+			config.Config.ServerLogGenerator(err.Error())
+		}
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
@@ -33,6 +37,7 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 	NewPost.User_ID = int(Session.UserID)
 
 	if _, err := NewPost.AddPost(); err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)
 		return
 	}

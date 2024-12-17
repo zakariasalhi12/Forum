@@ -20,6 +20,7 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	var NewPosts []helpers.AllPosts
 	NewPosts, err := GetPosts(r, PostID)
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
 	}

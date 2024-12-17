@@ -21,6 +21,9 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 
 	Status, err := helpers.ParseRequestBody(r, &User)
 	if err != nil {
+		if Status == 500 {
+			config.Config.ServerLogGenerator(err.Error())
+		}
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
@@ -35,11 +38,13 @@ func LoginApi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)
 		return
 	}
 	uuid, err := uuid.NewV4()
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)
 		return
 	}

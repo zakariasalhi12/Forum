@@ -31,6 +31,7 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}

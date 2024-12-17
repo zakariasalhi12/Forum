@@ -5,6 +5,7 @@ import (
 	"os"
 
 	models "forum/BackEnd/Models"
+	"forum/BackEnd/config"
 	"forum/BackEnd/helpers"
 )
 
@@ -16,6 +17,7 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 
 	Data, err := os.ReadFile("FrontEnd/Templates/register.html")
 	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
 		helpers.ErrorWriter(w, "Error 500", 500)
 		return
 	}
