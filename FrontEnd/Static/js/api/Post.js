@@ -36,40 +36,37 @@ async function PostLoader() {
     }
     PostContainer.innerHTML =
         `
-                    <div class="post">
-                    <div class="profile">
-                        <h3>${post.UserName}</h3>
-                        <div>
-                            <p>Join Data: ${formatDate(UserInfo.CreatedAt)}</p>
-                        </div>
-                        <div>
-                            <p>Total Posts: ${UserInfo.TotalPosts}</p>
-                        </div>
-                        <div>
-                            <p>Role: ${UserInfo.Role}</p>
-                        </div>
+        <div class="post">
+            <div class="profile">
+                <h3>${post.UserName}</h3>
+                    <div>
+                        <p>Join Data: ${formatDate(UserInfo.CreatedAt)}</p>
                     </div>
-
-                    <div class="postContent">
-                        <div class="postitle">
-                            <p>${post.Title}</p>
-                        </div>
-                        <div class="postcontent">
-                            <p>${post.Content}</p>
-                        </div>
-
-                        <fieldset class="tags">
-                            <legend>Tags</legend>
-                            ${Tags}
-                        </fieldset>
+                    <div>
+                        <p>Total Posts: ${UserInfo.TotalPosts}</p>
                     </div>
-
+                    <div>
+                        <p>Role: ${UserInfo.Role}</p>
+                    </div>
+            </div>
+            <div class="postContent">
+                <div class="postitle">
+                    <p>${post.Title}</p>
                 </div>
-                <div class="reactions">
-                    ${LikeIcon}
-                    ${DislikeIcon}
-                    <p class="comment"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="${BlackColor}"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/><span>${CommentsCounter}</span></svg></p>
+                <div class="postcontent">
+                    <p>${post.Content}</p>
                 </div>
+                <fieldset class="tags">
+                    <legend>Tags</legend>
+                    ${Tags}
+                </fieldset>
+            </div>
+        </div>
+        <div class="reactions">
+            ${LikeIcon}
+            ${DislikeIcon}
+            <p class="comment"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="${BlackColor}"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/><span>${CommentsCounter}</span></svg></p>
+        </div>
     `
 
     if (CommentsCounter != 0) {
@@ -116,9 +113,6 @@ async function PostLoader() {
     document.dispatchEvent(CreatePostEvent)
 }
 
-
-
-
 function formatDate(date) {
     const day = new Date(date)
     const month = day.getMonth() + 1
@@ -127,8 +121,4 @@ function formatDate(date) {
     return `${month}/${currentDay}/${year}`;
 }
 
-
 PostLoader()
-
-
-
