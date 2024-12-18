@@ -108,4 +108,4 @@ function formatDate(date) {
 
 LoadData()
 
-export { formatDate }
+export { formatDate, LoadData }

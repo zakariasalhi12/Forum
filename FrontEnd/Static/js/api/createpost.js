@@ -1,3 +1,4 @@
+import {LoadData} from './Allposts.js'
 document.addEventListener("elementReady", () => {
     const PostButton = document.getElementById("createpost")
     if (PostButton) {
@@ -24,11 +25,17 @@ document.addEventListener("elementReady", () => {
             }
 
             alert("Post Created successfuly")
-            window.location.href = "/"
+            resetFormFields()
+            LoadData()
         })
     }
 })
 
+function resetFormFields() {
+    document.getElementById("Posttitle").value = "";
+    document.getElementById("Postcontent").value = "";
+    document.getElementById("Postopic").value = "";
+}
 
 
 
