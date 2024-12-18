@@ -1,4 +1,5 @@
 import {CreateCommentSection} from "./Config.js"
+import {PostLoader} from './Post.js'
 
 async function CreateComment() {
 
@@ -28,7 +29,9 @@ async function CreateComment() {
         }
 
         alert(Data.Message)
-        window.location.href = `/post?id=${document.getElementById("post-container").getAttribute("data-id")}`
+        e.target.parentElement.querySelectorAll("textarea")[0].value = ''
+        PostLoader()
+        //window.location.href = `/post?id=${document.getElementById("post-container").getAttribute("data-id")}`
 
     })
 }
