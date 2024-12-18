@@ -27,9 +27,9 @@ async function LoadData(filter) {
     if (!Data) {
         return
     }
-
+    const Parent = document.getElementById("forums-container")
+    Parent.innerHTML = ""
     Data.forEach(post => {
-        const Parent = document.getElementById("forums-container")
         let CommentsCounter = 0
         if (post.Comments) {
             CommentsCounter = post.Comments.length
