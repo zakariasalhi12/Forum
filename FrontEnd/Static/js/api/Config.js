@@ -40,4 +40,12 @@ const CreatePostSection =
 </div>
 `
 
-export{PurpleColor , BlackColor , CreateCommentSection , CreatePostSection}
+function FormatDate(date) {
+    const day = new Date(date)
+    const month = day.getMonth() + 1
+    const currentDay = day.getDate()
+    const year = day.getFullYear()
+    return `${month}/${currentDay}/${year}`;
+}
+
+export{PurpleColor , BlackColor , CreateCommentSection , CreatePostSection, FormatDate}

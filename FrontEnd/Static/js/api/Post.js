@@ -1,4 +1,4 @@
-import { BlackColor, PurpleColor } from "./Config.js"
+import { BlackColor, PurpleColor , FormatDate } from "./Config.js"
 
 async function PostLoader() {
 
@@ -41,7 +41,7 @@ async function PostLoader() {
             <div class="profile">
                 <h3>${post.UserName}</h3>
                     <div>
-                        <p>Join Data: ${formatDate(UserInfo.CreatedAt)}</p>
+                        <p>Join Data: ${FormatDate(UserInfo.CreatedAt)}</p>
                     </div>
                     <div>
                         <p>Total Posts: ${UserInfo.TotalPosts}</p>
@@ -100,7 +100,7 @@ async function PostLoader() {
                 <div class="topics">
                     <div class="tags">
                     </div>
-                    <p>${formatDate(comment.CreatedAt)}</p>
+                    <p>${FormatDate(comment.CreatedAt)}</p>
                 </div>
                 <div class="reactions">
                     ${LikeIcon2}
@@ -116,15 +116,6 @@ async function PostLoader() {
     document.dispatchEvent(CreatePostEvent)
 }
 
-function formatDate(date) {
-    const day = new Date(date)
-    const month = day.getMonth() + 1
-    const currentDay = day.getDate()
-    const year = day.getFullYear()
-    return `${month}/${currentDay}/${year}`;
-}
-
 PostLoader()
-
 
 export {PostLoader}

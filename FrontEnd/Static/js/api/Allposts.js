@@ -1,4 +1,4 @@
-import { BlackColor , PurpleColor } from "./Config.js"
+import { BlackColor , PurpleColor , FormatDate } from "./Config.js"
 
 const MypostsButton = document.getElementById("myposts")
 const LikeFilterButton = document.getElementById("likedposts")
@@ -80,7 +80,7 @@ async function LoadData(filter) {
                 <div class="tags">
                     ${Tags}
                 </div>
-                <p>By ${post.UserName} At ${formatDate(post.CreatedAt)}</p>
+                <p>By ${post.UserName} At ${FormatDate(post.CreatedAt)}</p>
             </div>
             <div class="reactions">
                 ${LikeIcon}
@@ -95,17 +95,6 @@ async function LoadData(filter) {
     document.dispatchEvent(CreatePostEvent)
 }
 
-
-function formatDate(date) {
-    const day = new Date(date)
-    const month = day.getMonth() + 1
-    const currentDay = day.getDate()
-    const year = day.getFullYear()
-    const hours = day.getHours()
-    const minutes = day.getMinutes()
-    return `${month}/${currentDay}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-}
-
 LoadData()
 
-export { formatDate, LoadData }
+export { LoadData }
