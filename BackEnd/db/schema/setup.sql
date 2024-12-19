@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    role TEXT
+    role TEXT DEFAULT 'user'
 );
 -- POSTS TABLE --
 CREATE TABLE IF NOT EXISTS posts (
@@ -43,8 +43,6 @@ CREATE TABLE IF NOT EXISTS likes_dislikes (
     user_id INTEGER,
     is_like BOOLEAN,
     is_comment BOOLEAN,
-    FOREIGN KEY(post_or_comment_id) REFERENCES posts(id),
-    FOREIGN KEY(post_or_comment_id) REFERENCES comments(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 

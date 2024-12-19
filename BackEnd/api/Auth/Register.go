@@ -20,7 +20,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// Create a new instance of NewUser model
-	NewUser := models.NewUser()
+	NewUser := &models.Register{}
 
 	// Get the Body Request And Parse It into my newuser Model
 	Status, err := helpers.ParseRequestBody(r, &NewUser)

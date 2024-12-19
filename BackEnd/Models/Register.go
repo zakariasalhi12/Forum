@@ -26,18 +26,12 @@ var (
 	ErrEmailAlreadyUsed = errors.New("email already used")
 )
 
-func NewUser() *Register {
-	return &Register{
-		Role: "User",
-	}
-}
-
 func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 	R.Password = html.EscapeString(R.Password)
 	if err := R.RegisterValidation(); err != nil {
 		return err
 	}
-	Res, err := config.Config.Database.Exec("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)", R.UserName, R.Email, R.Password, R.Role)
+	Res, err := config.Config.Database.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", R.UserName, R.Email, R.Password)
 	if err != nil {
 		return ErrEmailAlreadyUsed
 	}
