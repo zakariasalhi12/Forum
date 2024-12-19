@@ -42,13 +42,13 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
-	helpers.Writer(w, struct{
-		CreatedAt string
-		Role string
-		TotalPosts int 
+	helpers.Writer(w, struct {
+		CreatedAt  string
+		Role       string
+		TotalPosts int
 	}{
-		CreatedAt: UserInfo.CreatedAt,
-		Role: UserInfo.Role,
+		CreatedAt:  UserInfo.CreatedAt,
+		Role:       UserInfo.Role,
 		TotalPosts: UserInfo.TotalPosts,
 	}, 200)
 }
