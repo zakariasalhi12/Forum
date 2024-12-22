@@ -35,7 +35,10 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	NewPost.User_ID = int(Session.UserID)
-
+	if err := NewPost.RemoveDuplicatedInCategorys();err != nil {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		return
+	}
 	if _, err := NewPost.AddPost(); err != nil {
 		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)

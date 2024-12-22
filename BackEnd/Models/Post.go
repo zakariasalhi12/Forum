@@ -1,8 +1,10 @@
 package models
 
 import (
-	"forum/BackEnd/config"
+	"errors"
 	"html"
+
+	"forum/BackEnd/config"
 )
 
 type Posts struct {
@@ -46,4 +48,27 @@ func (p *Posts) InserCategorys(PostId int) error {
 		}
 	}
 	return nil
+}
+
+func (p *Posts) RemoveDuplicatedInCategorys() error {
+	res := []string(nil)
+	for _, element := range p.Categories {
+		if len(element) >= 15 {
+			return errors.New("The maximum topic length is 15 characters. : " + html.EscapeString(element))
+		}
+		if !Include(res, element) && element != "" {
+			res = append(res, html.EscapeString(element))
+		}
+	}
+	p.Categories = res
+	return nil
+}
+
+func Include(arr []string, sep string) bool {
+	for _, element := range arr {
+		if element == sep {
+			return true
+		}
+	}
+	return false
 }

@@ -31,7 +31,7 @@ const CreatePostSection =
             <textarea id="Postcontent" style="resize: none; width: 100%;" rows="5" id="registeremail" ></textarea>
         </fieldset>
         <fieldset>
-            <p>Every topic separet by space</p>
+            <p>Every topic separet by space . The maximum number of topics is 6</p>
             <legend>Post Topics :</legend>
             <input id="Postopic" type="text">
         </fieldset>
