@@ -60,6 +60,9 @@ func (p *Posts) RemoveDuplicatedInCategorys() error {
 			res = append(res, html.EscapeString(element))
 		}
 	}
+	if len(p.Categories) > 6 {
+		return errors.New("the maximum topic lenght is 6")
+	}
 	p.Categories = res
 	return nil
 }
