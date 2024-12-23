@@ -86,14 +86,14 @@ async function PostLoader() {
         
         const Parent = document.getElementById("comment-container")
         post.Comments.forEach(comment => {
-            let LikeIcon2 = LikeButton(BlackColor , comment.Likes.Counter)
-            let DislikeIcon2 = DislikeButton(BlackColor , comment.Dislikes.Counter)
+            let LikeIcon2 = LikeButton(BlackColor , comment.Likes.Counter , true)
+            let DislikeIcon2 = DislikeButton(BlackColor , comment.Dislikes.Counter , true)
 
             if (comment.Likes.IsLiked) {
-                LikeIcon2 = LikeButton(PurpleColor , comment.Likes.Counter)
+                LikeIcon2 = LikeButton(PurpleColor , comment.Likes.Counter , true)
             }
             if (comment.Dislikes.IsDislike) {
-                DislikeIcon2 = DislikeButton(PurpleColor , comment.Dislikes.Counter)
+                DislikeIcon2 = DislikeButton(PurpleColor , comment.Dislikes.Counter , true)
             }
 
             const Post = document.createElement("div")
