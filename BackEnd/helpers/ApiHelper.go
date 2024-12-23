@@ -24,11 +24,6 @@ func Writer(w http.ResponseWriter, response any, status int) {
 	w.Write(res)
 }
 
-// Machi wkita daba
-func TagsChecker(arr []string) bool {
-	return false
-}
-
 func CheckEmpty(args ...string) bool {
 	for _, arg := range args {
 		if arg == "" {
