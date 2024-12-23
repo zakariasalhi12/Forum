@@ -7,20 +7,24 @@ import (
 )
 
 type ServerConfig struct {
-	Port       string
-	DNS        string
-	Database   *sql.DB
-	ApiLogs    bool
-	ServerLogs bool
-	SaveLogs   bool
+	Port              string
+	DNS               string
+	Database          *sql.DB
+	ApiLogs           bool
+	ServerLogs        bool
+	SaveLogs          bool
+	LogsDirPath       string
+	TotalPostsPerPage int
 }
 
 var Config = &ServerConfig{
-	Port:       ":8080",
-	DNS:        "localhost",
-	ApiLogs:    true,
-	ServerLogs: true,
-	SaveLogs:   true,
+	Port:              ":8080",
+	DNS:               "localhost",
+	ApiLogs:           true,
+	ServerLogs:        true,
+	SaveLogs:          true,
+	LogsDirPath:       "Logs/",
+	TotalPostsPerPage: 20,
 }
 
 func (s *ServerConfig) ApiLogGenerator(str string) {
@@ -30,7 +34,7 @@ func (s *ServerConfig) ApiLogGenerator(str string) {
 	log.SetOutput(os.Stdin)
 	log.Println(str)
 	if s.SaveLogs {
-		file, err := os.OpenFile("Logs/apilogs.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+		file, err := os.OpenFile(s.LogsDirPath+"apilogs.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 		if err != nil {
 			log.Println(err)
 			return
@@ -48,7 +52,7 @@ func (s *ServerConfig) ServerLogGenerator(str string) {
 	log.SetOutput(os.Stdin)
 	log.Println(str)
 	if s.SaveLogs {
-		file, err := os.OpenFile("Logs/serverlogs.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+		file, err := os.OpenFile(s.LogsDirPath+"serverlogs.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 		if err != nil {
 			log.Println(err)
 			return

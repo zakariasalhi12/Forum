@@ -11,12 +11,12 @@ import (
 
 func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		helpers.Writer(w, map[string]string{"Error": "Methode not allowed"}, http.StatusMethodNotAllowed)
+		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	PostID := r.FormValue("id")
-
+	// Page := r.FormValue("page")
 	var NewPosts []helpers.AllPosts
 	NewPosts, err := GetPosts(r, PostID)
 	if err != nil {
