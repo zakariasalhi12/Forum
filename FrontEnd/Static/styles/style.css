@@ -44,6 +44,16 @@ main {
     background-color: var(--orange);
 }
 
+noscript {
+    position: fixed;
+    background-color: white;
+    color: black;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 /*=======================================
         Header style
 ========================================*/
