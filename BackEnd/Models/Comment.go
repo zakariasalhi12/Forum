@@ -1,8 +1,10 @@
 package models
 
 import (
-	"forum/BackEnd/config"
+	"errors"
 	"html"
+
+	"forum/BackEnd/config"
 )
 
 type Comment struct {
@@ -19,11 +21,18 @@ func CheckCommentExist(CommentId int) (bool, error) {
 	return Exists, nil
 }
 
+func (c *Comment) CheckCommentValidation() error {
+	if len(c.Content) >= 250 {
+		return errors.New("the maximum comment content length is 250 characters")
+	}
+	return nil
+}
+
 func (c *Comment) AddComment() error {
 	html.EscapeString(c.Content)
 	_, err := config.Config.Database.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", c.PostId, c.UserID, c.Content)
 	if err != nil {
-		return nil
+		return err
 	}
 	return nil
 }

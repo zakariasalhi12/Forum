@@ -29,6 +29,10 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	Comment.UserID = int(Session.UserID)
+	if err := Comment.CheckCommentValidation(); err != nil {
+		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
+		return
+	}
 	if err := Comment.AddComment(); err != nil {
 		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, 500)

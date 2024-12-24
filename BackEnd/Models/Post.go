@@ -40,6 +40,19 @@ func (p *Posts) AddPost() (int, error) {
 	return int(LastID), nil
 }
 
+func (p *Posts) CheckPost() error {
+	if len(p.Content) >= 250 {
+		return errors.New("the maximum post content length is 250 characters")
+	}
+	if len(p.Title) >= 50 {
+		return errors.New("the maximum post title length is 250 characters")
+	}
+	if err := p.RemoveDuplicatedInCategorys(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *Posts) InserCategorys(PostId int) error {
 	for _, categorie := range p.Categories {
 		_, err := config.Config.Database.Exec("INSERT INTO categories (post_id , categorie) VALUES (?, ?)", PostId, categorie)

@@ -55,6 +55,9 @@ func (R *Register) RegisterValidation() error {
 	if helpers.CheckEmpty(R.Email, R.Password, R.UserName) {
 		return helpers.ErrInvalidRequest
 	}
+	if len(R.Email) > 40 || len(R.Password) > 30 || len(R.UserName) > 15 {
+		return errors.New("content of email or password or username is large")
+	}
 	// The username must be between 3 and 20 characters and can contain letters, numbers, underscores, and hyphens
 	UserNameValidation := regexp.MustCompile(`^[a-zA-Z0-9_-]{3,20}$`)
 	// Validates email format: the username and domain can contain letters, numbers, and certain special characters, with a 2+ character top-level domain.
