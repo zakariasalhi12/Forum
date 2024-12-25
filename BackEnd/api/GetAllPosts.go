@@ -22,17 +22,16 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	Filter := r.URL.Query().Get("filter")
 	Tagfilter := r.URL.Query().Get("tagfilter")
 	Offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	limit := 5
 
 	var NewPosts []models.AllPosts
 	if Filter == "post" {
-		NewPosts, err = GetMyPosts(r, Filter, Offset, limit)
+		NewPosts, err = GetMyPosts(r, Filter, Offset, config.Config.TotalPostsPerPage)
 	} else if Filter == "like" {
-		NewPosts, err = GetLikePosts(r, Filter, Offset, limit)
+		NewPosts, err = GetLikePosts(r, Filter, Offset, config.Config.TotalPostsPerPage)
 	} else if Filter == "Tag" {
-		NewPosts, err = GetTagPosts(r, Filter, Tagfilter, Offset, limit)
+		NewPosts, err = GetTagPosts(r, Filter, Tagfilter, Offset, config.Config.TotalPostsPerPage)
 	} else {
-		NewPosts, err = GetPosts(r, PostID, Offset, limit)
+		NewPosts, err = GetPosts(r, PostID, Offset, config.Config.TotalPostsPerPage)
 	}
 	if err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
