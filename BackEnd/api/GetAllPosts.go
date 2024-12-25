@@ -17,7 +17,7 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	PostID := r.FormValue("id")
 	// Page := r.FormValue("page")
-	var NewPosts []helpers.AllPosts
+	var NewPosts []models.AllPosts
 	NewPosts, err := GetPosts(r, PostID)
 	if err != nil {
 		config.Config.ServerLogGenerator(err.Error())
@@ -27,8 +27,8 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 	helpers.Writer(w, NewPosts, 200)
 }
 
-func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
-	var posts []helpers.AllPosts
+func GetPosts(r *http.Request, PostId string) ([]models.AllPosts, error) {
+	var posts []models.AllPosts
 
 	if PostId != "" {
 		rows, err := config.Config.Database.Query("SELECT id, user_id, title, content , created_at FROM posts WHERE id = ?", PostId)
@@ -50,10 +50,10 @@ func GetPosts(r *http.Request, PostId string) ([]helpers.AllPosts, error) {
 	return posts, nil
 }
 
-func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]helpers.AllPosts) error {
+func GetAllPosts(r *http.Request, rows *sql.Rows, posts *[]models.AllPosts) error {
 	defer rows.Close()
 	for rows.Next() {
-		var post helpers.AllPosts
+		var post models.AllPosts
 		if err := rows.Scan(&post.Id, &post.User_id, &post.Title, &post.Content, &post.CreatedAt); err != nil {
 			return err
 		}
@@ -109,8 +109,8 @@ func GetCategories(PostId int) ([]string, error) {
 	return Categories, nil
 }
 
-func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
-	var Comments []helpers.Comments
+func GetComments(r *http.Request, postId int) ([]models.Comments, error) {
+	var Comments []models.Comments
 	rows, err := config.Config.Database.Query("SELECT id , user_id , content , created_at FROM comments WHERE post_id = ? ORDER BY created_at DESC", postId)
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		comment := helpers.Comments{}
+		comment := models.Comments{}
 		if err := rows.Scan(&comment.Id, &comment.UserID, &comment.Content, &comment.CreatedAt); err != nil {
 			return nil, err
 		}
@@ -147,8 +147,8 @@ func GetComments(r *http.Request, postId int) ([]helpers.Comments, error) {
 	return Comments, nil
 }
 
-func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
-	var Likes helpers.Likes
+func GetLikes(r *http.Request, Id int, isComment bool) (models.Likes, error) {
+	var Likes models.Likes
 	Session := &models.Session{}
 	err := Session.GetUserID(r)
 	if err == nil {
@@ -163,13 +163,13 @@ func GetLikes(r *http.Request, Id int, isComment bool) (helpers.Likes, error) {
 		return Likes, nil
 	}
 	if err != nil {
-		return helpers.Likes{}, err
+		return models.Likes{}, err
 	}
 	return Likes, nil
 }
 
-func GetDislikes(r *http.Request, Id int, isComment bool) (helpers.Dislikes, error) {
-	var Dislikes helpers.Dislikes
+func GetDislikes(r *http.Request, Id int, isComment bool) (models.Dislikes, error) {
+	var Dislikes models.Dislikes
 	Session := &models.Session{}
 	err := Session.GetUserID(r)
 	if err == nil {
@@ -184,7 +184,7 @@ func GetDislikes(r *http.Request, Id int, isComment bool) (helpers.Dislikes, err
 		return Dislikes, nil
 	}
 	if err != nil {
-		return helpers.Dislikes{}, err
+		return models.Dislikes{}, err
 	}
 	return Dislikes, nil
 }
