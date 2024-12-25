@@ -1,8 +1,30 @@
 import { BlackColor , PurpleColor , FormatDate , LikeButton , DislikeButton } from "./Config.js"
 
+let tagfilter
+let filters
+let offset = 0
+const limit = 5
+
 const MypostsButton = document.getElementById("myposts")
 const LikeFilterButton = document.getElementById("likedposts")
 const TopicFilterButton = document.getElementById("topic")
+const NextButton = document.getElementById("next")
+const PrevionsButton = document.getElementById("previons")
+
+if (NextButton){
+    NextButton.addEventListener("click", ()=> {
+        offset += limit
+        LoadData(filters,offset)
+    })
+}
+if (PrevionsButton){
+    PrevionsButton.addEventListener("click", ()=> {
+        if (offset > 0 ){
+            offset -= limit            
+            LoadData(filters,offset)
+        }
+    })
+}
 
 if (MypostsButton) {
     MypostsButton.addEventListener("click", () => {
@@ -21,12 +43,18 @@ if (TopicFilterButton) {
 }
 
 async function LoadData(filter) {
-    const res = await fetch("api/posts")
+    const res = await fetch(`/api/posts?filter=${filter}&offset=${offset}&tagfilter=${tagfilter}`)
     const Data = await res.json()
 
     if (!Data) {
+        handleEmptyDataState()
         return
     }
+    if (NextButton) {
+        NextButton.disabled = false;
+        NextButton.style.display = 'block'
+    }
+
     const Parent = document.getElementById("forums-container")
     Parent.innerHTML = ""
     Data.forEach(post => {
@@ -35,21 +63,6 @@ async function LoadData(filter) {
             CommentsCounter = post.Comments.length
         }
 
-        if (filter === "post") {
-            if (post.User_id !== +sessionStorage.getItem("user_id")) {
-                return
-            }
-        }
-        if (filter === "like") {
-            if (!post.Likes.IsLiked) {
-                return
-            }
-        }
-        if (filter === "Tag") {
-            if (!post.Categories.includes(document.getElementById("tagfilter").value)) {
-                return
-            }
-        }
 
         let Tags = ""
         let LikeIcon = LikeButton(BlackColor , post.Likes.Counter)
@@ -98,5 +111,12 @@ async function LoadData(filter) {
 }
 
 LoadData()
-
+function handleEmptyDataState() {
+    if (NextButton) {
+        NextButton.disabled = true;
+        NextButton.style.display = 'none';
+    }  
+    const parent = document.getElementById("forums-container");
+    parent.innerHTML = "<p>No more posts available</p>";
+}
 export { LoadData }

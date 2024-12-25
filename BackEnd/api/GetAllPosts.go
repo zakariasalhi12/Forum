@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	models "forum/BackEnd/Models"
 	"forum/BackEnd/config"
@@ -10,24 +11,37 @@ import (
 )
 
 func AllPostsApi(w http.ResponseWriter, r *http.Request) {
+	var err error
 	if r.Method != http.MethodGet {
 		helpers.Writer(w, map[string]string{"Error": helpers.ErrServer.Error()}, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	PostID := r.FormValue("id")
-	// Page := r.FormValue("page")
+	// add pages
+	Filter := r.URL.Query().Get("filter")
+	Tagfilter := r.URL.Query().Get("tagfilter")
+	Offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+	limit := 5
+
 	var NewPosts []models.AllPosts
-	NewPosts, err := GetPosts(r, PostID)
+	if Filter == "post" {
+		NewPosts, err = GetMyPosts(r, Filter, Offset, limit)
+	} else if Filter == "like" {
+		NewPosts, err = GetLikePosts(r, Filter, Offset, limit)
+	} else if Filter == "Tag" {
+		NewPosts, err = GetTagPosts(r, Filter, Tagfilter, Offset, limit)
+	} else {
+		NewPosts, err = GetPosts(r, PostID, Offset, limit)
+	}
 	if err != nil {
-		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusInternalServerError)
 		return
 	}
 	helpers.Writer(w, NewPosts, 200)
 }
 
-func GetPosts(r *http.Request, PostId string) ([]models.AllPosts, error) {
+func GetPosts(r *http.Request, PostId string, offset, limit int) ([]models.AllPosts, error) {
 	var posts []models.AllPosts
 
 	if PostId != "" {
@@ -40,13 +54,14 @@ func GetPosts(r *http.Request, PostId string) ([]models.AllPosts, error) {
 		}
 		return posts, nil
 	}
-	rows, err := config.Config.Database.Query("SELECT id, user_id, title, content , created_at FROM posts ORDER BY created_at DESC")
+	rows, err := config.Config.Database.Query("SELECT id, user_id, title, content , created_at FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?", limit, offset)
 	if err != nil {
 		return nil, err
 	}
 	if err := GetAllPosts(r, rows, &posts); err != nil {
 		return nil, err
 	}
+
 	return posts, nil
 }
 
