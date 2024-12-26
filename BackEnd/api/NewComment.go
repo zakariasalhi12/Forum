@@ -23,11 +23,13 @@ func NewCommentAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, Status)
 		return
 	}
+
 	Session := &models.Session{}
 	if err := Session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
 		return
 	}
+
 	Comment.UserID = int(Session.UserID)
 	if err := Comment.CheckCommentValidation(); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
