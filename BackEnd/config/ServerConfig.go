@@ -18,7 +18,7 @@ type ServerConfig struct {
 }
 
 var Config = &ServerConfig{
-	Port:              ":8088",
+	Port:              ":8082",
 	DNS:               "localhost",
 	ApiLogs:           true,
 	ServerLogs:        true,

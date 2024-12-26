@@ -63,7 +63,7 @@ func GetTagPosts(r *http.Request, filter, tagfilter string, offset, limit int) (
 		JOIN categories c ON p.id = c.post_id
 		WHERE c.categorie = ? 
 		ORDER BY p.created_at DESC LIMIT ? OFFSET ?
-	`
+		`
 	rows, err := config.Config.Database.Query(query, tagfilter, limit, offset)
 	if err != nil {
 		return nil, err

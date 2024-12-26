@@ -38,6 +38,7 @@ if (LikeFilterButton) {
 }
 if (TopicFilterButton) {
     TopicFilterButton.addEventListener("click", () => {
+        tagfilter = document.getElementById("tagfilter").value
         LoadData("Tag")
     })
 }
