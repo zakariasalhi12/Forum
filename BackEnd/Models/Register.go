@@ -51,6 +51,7 @@ func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 }
 
 func (R *Register) RegisterValidation() error {
+	R.Email, R.Password, R.UserName = helpers.RemoveExtraSpaces(R.Email), helpers.RemoveExtraSpaces(R.Password), helpers.RemoveExtraSpaces(R.UserName)
 	// Check if any of the required fields (Email, Password, UserName) are empty
 	if helpers.CheckEmpty(R.Email, R.Password, R.UserName) {
 		return helpers.ErrInvalidRequest

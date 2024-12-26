@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strings"
 )
 
 var (
@@ -42,4 +43,9 @@ func ParseRequestBody(r *http.Request, Data any) (int, error) {
 		return 400, ErrInvalidRequest
 	}
 	return -1, nil
+}
+
+func RemoveExtraSpaces(s string) string {
+	words := strings.Fields(s)
+	return strings.Join(words, " ")
 }

@@ -3,8 +3,10 @@ package models
 import (
 	"errors"
 	"html"
+	"strings"
 
 	"forum/BackEnd/config"
+	"forum/BackEnd/helpers"
 )
 
 type Posts struct {
@@ -41,6 +43,11 @@ func (p *Posts) AddPost() (int, error) {
 }
 
 func (p *Posts) CheckPost() error {
+	p.Title, p.Content = helpers.RemoveExtraSpaces(p.Title), helpers.RemoveExtraSpaces(p.Content)
+	if helpers.CheckEmpty(p.Title, p.Content) {
+		return errors.New("request Cant be empty")
+	}
+
 	if len(p.Content) >= 250 {
 		return errors.New("the maximum post content length is 250 characters")
 	}
@@ -65,7 +72,7 @@ func (p *Posts) InserCategorys(PostId int) error {
 
 func (p *Posts) RemoveDuplicatedInCategorys() error {
 	res := []string(nil)
-	for _, element := range p.Categories {
+	for _, element := range strings.Fields(strings.Join(p.Categories, " ")) {
 		if len(element) >= 15 {
 			return errors.New("The maximum topic length is 15 characters. : " + html.EscapeString(element))
 		}
@@ -73,7 +80,7 @@ func (p *Posts) RemoveDuplicatedInCategorys() error {
 			res = append(res, html.EscapeString(element))
 		}
 	}
-	if len(p.Categories) > 6 {
+	if len(res) > 6 {
 		return errors.New("the maximum topic lenght is 6")
 	}
 	p.Categories = res

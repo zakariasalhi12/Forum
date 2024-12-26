@@ -5,6 +5,7 @@ import (
 	"html"
 
 	"forum/BackEnd/config"
+	"forum/BackEnd/helpers"
 )
 
 type Comment struct {
@@ -22,6 +23,10 @@ func CheckCommentExist(CommentId int) (bool, error) {
 }
 
 func (c *Comment) CheckCommentValidation() error {
+	c.Content = helpers.RemoveExtraSpaces(c.Content)
+	if helpers.CheckEmpty(c.Content) {
+		return errors.New("request Cant be empty")
+	}
 	if len(c.Content) >= 250 {
 		return errors.New("the maximum comment content length is 250 characters")
 	}

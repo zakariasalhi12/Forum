@@ -25,10 +25,6 @@ func PostsAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if helpers.CheckEmpty(NewPost.Title, NewPost.Content) {
-		helpers.Writer(w, map[string]string{"Error": "Request Cant be empty"}, 400)
-		return
-	}
 	Session := &models.Session{}
 	if err := Session.GetUserID(r); err != nil {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, http.StatusBadRequest)
