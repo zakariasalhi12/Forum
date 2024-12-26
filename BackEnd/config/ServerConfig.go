@@ -18,13 +18,13 @@ type ServerConfig struct {
 }
 
 var Config = &ServerConfig{
-	Port:              ":8080",
+	Port:              ":8088",
 	DNS:               "localhost",
 	ApiLogs:           true,
 	ServerLogs:        true,
 	SaveLogs:          true,
 	LogsDirPath:       "Logs/",
-	TotalPostsPerPage: 20,
+	TotalPostsPerPage: 20, // NOTE: If you change the value of this variable, make sure to update it in the front-end as well.
 }
 
 func (s *ServerConfig) ApiLogGenerator(str string) {

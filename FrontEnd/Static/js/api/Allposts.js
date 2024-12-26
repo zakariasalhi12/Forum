@@ -3,7 +3,7 @@ import { BlackColor , PurpleColor , FormatDate , LikeButton , DislikeButton } fr
 let tagfilter
 let filters
 let offset = 0
-const limit = 5
+const limit = 20 // NOTE: Ensure this value matches the corresponding value in the backend.
 
 const MypostsButton = document.getElementById("myposts")
 const LikeFilterButton = document.getElementById("likedposts")
@@ -43,6 +43,7 @@ if (TopicFilterButton) {
 }
 
 async function LoadData(filter) {
+    
     const res = await fetch(`/api/posts?filter=${filter}&offset=${offset}&tagfilter=${tagfilter}`)
     const Data = await res.json()
 
