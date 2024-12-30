@@ -307,7 +307,16 @@ header a:hover {
 
 
 @media (max-width: 1000px) {
+    *{
+        font-size: 15px;
+    }
     .border {
         width: 85%;
     }
+    .post {
+        width: 100%;
+    }
+    .post .profile div {
+        width: 100px;
+    } 
 }
