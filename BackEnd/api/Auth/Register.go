@@ -34,7 +34,7 @@ func RegisterAPI(w http.ResponseWriter, r *http.Request) {
 
 	// Attempt to add the new user to the database
 	err = NewUser.AddUserTodb(w)
-	if err == helpers.ErrInvalidRequest || err == models.ErrEmailAlreadyUsed || err == models.ErrInvalidEmail || err == models.ErrInvalidPassword || err == models.ErrInvalidUserName {
+	if err == helpers.ErrInvalidRequest || err == models.ErrEmailAlreadyUsed || err == models.ErrInvalidEmail || err == models.ErrInvalidPassword || err == models.ErrInvalidUserName || err == models.ErrUserNameAlreadyUsed {
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 400)
 		return
 	}

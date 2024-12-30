@@ -21,26 +21,18 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Unauthorized": "Token missing or invalid"}, http.StatusUnauthorized)
 		return
 	}
-	OldSession := models.Session{Response: w, Token: cookie.Value}
+	OldSession := &models.Session{Response: w, Token: cookie.Value}
 	OldSession.GetUserID(r)
-	NewSession := models.NewSession(w, cookie.Value, 0)
 
-	err = NewSession.DeleteSession()
-	if err == models.ErrInvalidToken {
-		helpers.Writer(w, map[string]string{"Unauthorized": err.Error()}, http.StatusUnauthorized)
-		return
-	}
-	if err != nil {
+	if err := OldSession.DeleteSession(); err != nil {
 		config.Config.ServerLogGenerator(err.Error())
 		helpers.Writer(w, map[string]string{"Error": err.Error()}, 500)
 		return
 	}
-
 	helpers.Writer(w, map[string]string{"Message": "Logout successfuly"}, 200)
 	// Logs Part
 	LoggoutUsser := models.User{Id: int(OldSession.UserID)}
 	LoggoutUsser.GetUserName()
 	LoggoutUsser.GetUserEmail()
 	config.Config.ApiLogGenerator(fmt.Sprintf(`New Logout | UserName : "%s" , Email : "%s"`, LoggoutUsser.UserName, LoggoutUsser.Email))
-
 }

@@ -3,9 +3,12 @@ package helpers
 import (
 	"encoding/json"
 	"errors"
+	"html/template"
 	"io"
 	"net/http"
 	"strings"
+
+	"forum/BackEnd/config"
 )
 
 var (
@@ -13,6 +16,26 @@ var (
 	ErrServer         = errors.New("an unexpected error occurred. please try again later")
 	ErrInvalidRequest = errors.New("invalid request")
 )
+
+type Error struct {
+	Error      string
+	StatusCode int
+}
+
+func ErrorWriter(w http.ResponseWriter, Err string, stcode int) {
+	NewErr := Error{
+		Error:      Err,
+		StatusCode: stcode,
+	}
+	t, err := template.ParseFiles("FrontEnd/Templates/Error.html")
+	if err != nil {
+		config.Config.ServerLogGenerator(err.Error())
+		http.Error(w, "Error Parsing file", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(NewErr.StatusCode)
+	t.Execute(w, NewErr)
+}
 
 // write a json response from the given data
 func Writer(w http.ResponseWriter, response any, status int) {

@@ -25,11 +25,11 @@ func AllPostsApi(w http.ResponseWriter, r *http.Request) {
 
 	var NewPosts []models.AllPosts
 	if Filter == "post" {
-		NewPosts, err = GetMyPosts(r, Filter, Offset, config.Config.TotalPostsPerPage)
+		NewPosts, err = GetMyPosts(r)
 	} else if Filter == "like" {
-		NewPosts, err = GetLikePosts(r, Filter, Offset, config.Config.TotalPostsPerPage)
+		NewPosts, err = GetLikePosts(r)
 	} else if Filter == "Tag" {
-		NewPosts, err = GetTagPosts(r, Filter, Tagfilter, Offset, config.Config.TotalPostsPerPage)
+		NewPosts, err = GetTagPosts(r,Tagfilter)
 	} else {
 		NewPosts, err = GetPosts(r, PostID, Offset, config.Config.TotalPostsPerPage)
 	}
