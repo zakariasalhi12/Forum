@@ -41,7 +41,7 @@ func (R *Register) AddUserTodb(w http.ResponseWriter) error {
 		return err
 	}
 	Cheking ,  err := R.CheckUsername()
-	if err != nil || !Cheking {
+	if err != nil || Cheking {
 		return ErrUserNameAlreadyUsed
 	}
 

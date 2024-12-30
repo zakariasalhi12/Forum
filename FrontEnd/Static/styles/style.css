@@ -305,3 +305,9 @@ header a:hover {
 
 }
 
+
+@media (max-width: 1000px) {
+    .border {
+        width: 85%;
+    }
+}
