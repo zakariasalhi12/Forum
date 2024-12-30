@@ -43,7 +43,7 @@ if (TopicFilterButton) {
     })
 }
 
-async function LoadData(filter) {
+async function LoadData(filter="") {
     
     const res = await fetch(`/api/posts?filter=${filter}&offset=${offset}&tagfilter=${tagfilter}`)
     const Data = await res.json()
@@ -52,7 +52,12 @@ async function LoadData(filter) {
         handleEmptyDataState()
         return
     }
-    if (NextButton) {
+    if (filter != ""){
+        NextButton.disabled = true;
+        NextButton.style.display = 'none';
+        PrevionsButton.disabled = true
+        PrevionsButton.style.display = 'none'
+    } else if (NextButton) {
         NextButton.disabled = false;
         NextButton.style.display = 'block'
     }
