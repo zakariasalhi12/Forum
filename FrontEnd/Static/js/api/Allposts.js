@@ -48,10 +48,6 @@ async function LoadData(filter="") {
     const res = await fetch(`/api/posts?filter=${filter}&offset=${offset}&tagfilter=${tagfilter}`)
     const Data = await res.json()
 
-    if (!Data) {
-        handleEmptyDataState()
-        return
-    }
     if (filter != ""){
         NextButton.disabled = true;
         NextButton.style.display = 'none';
@@ -60,6 +56,11 @@ async function LoadData(filter="") {
     } else if (NextButton) {
         NextButton.disabled = false;
         NextButton.style.display = 'block'
+    }
+
+    if (!Data && filter == "") {
+        handleEmptyDataState()
+        return
     }
 
     const Parent = document.getElementById("forums-container")
