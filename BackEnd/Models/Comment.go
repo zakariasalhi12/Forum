@@ -34,7 +34,7 @@ func (c *Comment) CheckCommentValidation() error {
 }
 
 func (c *Comment) AddComment() error {
-	html.EscapeString(c.Content)
+	c.Content = html.EscapeString(c.Content)
 	_, err := config.Config.Database.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", c.PostId, c.UserID, c.Content)
 	if err != nil {
 		return err

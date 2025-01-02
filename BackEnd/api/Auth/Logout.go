@@ -21,7 +21,7 @@ func LogoutAPI(w http.ResponseWriter, r *http.Request) {
 		helpers.Writer(w, map[string]string{"Unauthorized": "Token missing or invalid"}, http.StatusUnauthorized)
 		return
 	}
-	OldSession := &models.Session{Response: w, Token: cookie.Value}
+	OldSession := &models.Session{Response: w, Token: cookie.Value , Path: "/"}
 	OldSession.GetUserID(r)
 
 	if err := OldSession.DeleteSession(); err != nil {
